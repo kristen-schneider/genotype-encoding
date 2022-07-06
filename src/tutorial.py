@@ -101,7 +101,7 @@ def preprocess_triplets(anchor, positive, negative):
     """
     Given the filenames corresponding to the three images, load and
     preprocess them.
-    """
+    """ 
 
     return (
         preprocess_image(anchor),
@@ -127,6 +127,7 @@ positive_images = sorted(
 )
 
 image_count = len(anchor_images)
+print(type(image_count), image_count)
 
 anchor_dataset = tf.data.Dataset.from_tensor_slices(anchor_images)
 positive_dataset = tf.data.Dataset.from_tensor_slices(positive_images)
