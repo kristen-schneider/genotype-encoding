@@ -48,7 +48,7 @@ from tensorflow.keras.applications import resnet
 
 
 target_shape = (200, 200)
-
+print(type(target_shape), target_shape)
 
 """
 ## Load the dataset
