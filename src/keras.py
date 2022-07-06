@@ -8,19 +8,19 @@ encoded_positive_file = '/home/sdp/genotype-encoding/data/positive.txt'
 encoded_negative_file = '/home/sdp/genotype-encoding/data/negative.txt'
 
 def main():
-    # counting variants for dimension of vector
+    # counting variants and samples for dimesions of dataset
+    # ValueError: Input size must be at least 32x32
     num_variants = encoded_utils.count_variants(encoded_genotype_file)
+    target_shape = (num_variants,1)
+    
+    print(type(target_shape), target_shape)
+    num_samples = len(genotype_vectors)
+    print(type(num_samples), num_samples)
     
     # loading vectors (anchor, positive, and negative)
     genotype_vectors = encoded_utils.read_encoded_file(encoded_genotype_file)
     positive_vectors = encoded_utils.read_encoded_file(encoded_positive_file)
     negative_vectors = encoded_utils.read_encoded_file(encoded_negative_file)
-
-    # counting samples for dimension of dataset
-    num_samples = len(genotype_vectors)
-    print(type(num_samples), num_samples)
-    print(num_variants, num_samples)
-    target_shape = (num_variants,)
 
     # making dataset objects from lists
     genotype_dataset = tf.data.Dataset.from_tensor_slices(genotype_vectors)
