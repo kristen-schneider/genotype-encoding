@@ -1,5 +1,7 @@
 import encoded_utils
+
 import tensorflow as tf
+from tensorflow.keras import layers
 from tensorflow.keras.applications import resnet
 
 
@@ -8,20 +10,20 @@ encoded_positive_file = '/home/sdp/genotype-encoding/data/positive.txt'
 encoded_negative_file = '/home/sdp/genotype-encoding/data/negative.txt'
 
 def main():
-    # counting variants and samples for dimesions of dataset
-    # ValueError: Input size must be at least 32x32
-    num_variants = encoded_utils.count_variants(encoded_genotype_file)
-    target_shape = (num_variants,1)
-    
-    print(type(target_shape), target_shape)
-    num_samples = len(genotype_vectors)
-    print(type(num_samples), num_samples)
-    
     # loading vectors (anchor, positive, and negative)
     genotype_vectors = encoded_utils.read_encoded_file(encoded_genotype_file)
     positive_vectors = encoded_utils.read_encoded_file(encoded_positive_file)
     negative_vectors = encoded_utils.read_encoded_file(encoded_negative_file)
 
+    # counting variants and samples for dimesions of dataset
+    # ValueError: Input size must be at least 32x32
+    num_variants = encoded_utils.count_variants(encoded_genotype_file)
+    print(type(num_variants), num_variants)
+    num_samples = len(genotype_vectors)
+    print(type(num_samples), num_samples)
+    target_shape = (num_variants, 32) 
+    print(type(target_shape), target_shape)
+    
     # making dataset objects from lists
     genotype_dataset = tf.data.Dataset.from_tensor_slices(genotype_vectors)
     positive_dataset = tf.data.Dataset.from_tensor_slices(positive_vectors)
@@ -29,8 +31,8 @@ def main():
 
 
     #DEBUG
-    print('Genotype vectors\n')
-    for i in genotype_dataset: print(i)
+    #print('Genotype vectors\n')
+    #for i in genotype_dataset: print(i)
     #for i in positive_dataset: print(i)
     #for i in negative_dataset: print(i)
 
@@ -53,8 +55,9 @@ def main():
         weights='imagenet', input_shape=target_shape + (3,), include_top=False
     )
     
-    #flatten = layers.Flatten()
-    
+    flatten = layers.Flatten()(base_cnn.output)
+    dense1 = layers.Dense(512, activation='relu')(flatten)
+    dense1 = layers.BatchNormalization()(dense1) 
 
 
 
