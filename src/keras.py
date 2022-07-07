@@ -9,7 +9,8 @@ from tensorflow.keras import Model
 from tensorflow.keras import optimizers
 from tensorflow.keras.applications import resnet
 
-data_dir = '/Users/kristen/PycharmProjects/genotype-encoding/data/'
+#data_dir = '/Users/kristen/PycharmProjects/genotype-encoding/data/'
+data_dir = '/home/sdp/genotype-encoding/data/'
 
 encoded_genotype_file = data_dir + 'genotype.txt'
 encoded_positive_file = data_dir + 'positive.txt'
@@ -175,6 +176,21 @@ class SiameseModel(Model):
 siamese_model = SiameseModel(siamese_network)
 siamese_model.compile(optimizer=optimizers.Adam(0.0001))
 siamese_model.fit(train_dataset, epochs=10, validation_data=val_dataset)
+
+
+# inspecting learn
+sample = next(iter(train_dataset))
+genotype, positive, negative = sample
+genotype_embedding, positive_embedding, negative_embedding = (
+    embedding(resnet.preprocess_input(genotype)),
+    embedding(resnet.preprocess_input(positive)),
+    embedding(resnet.preprocess_input(negative)),
+)
+
+# compute cosine similarity
+cosine_similarity = metrics.CosineSimilarity()
+positive_similarity = cosine_similarity(genotype_embedding, positive_embedding)
+print("Positive similarity:", positive_similarity.numpy())
 
 #
 # if __name__ == '__main__':
