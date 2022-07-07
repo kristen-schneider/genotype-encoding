@@ -11,9 +11,10 @@ def read_encoded_file(encoded_file):
     for line in f:
         single_vector = []
         line_ = line.strip()
-        for i in line_:
-            single_vector.append(i)
+        all_vectors.append(line)
+        #for i in line_:
+        #    single_vector.append(i)
 
-        all_vectors.append(single_vector)
+        #all_vectors.append(single_vector)
     
     return all_vectors
