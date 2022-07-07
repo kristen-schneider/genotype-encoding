@@ -49,6 +49,7 @@ from tensorflow.keras.applications import resnet
 
 target_shape = (200, 200)
 
+
 """
 ## Load the dataset
 
@@ -100,8 +101,8 @@ def preprocess_triplets(anchor, positive, negative):
     """
     Given the filenames corresponding to the three images, load and
     preprocess them.
-    """ 
-
+    """
+    test = 'x'
     return (
         preprocess_image(anchor),
         preprocess_image(positive),
@@ -128,7 +129,6 @@ positive_images = sorted(
 image_count = len(anchor_images)
 
 anchor_dataset = tf.data.Dataset.from_tensor_slices(anchor_images)
-print("anchor_dataset", anchor_dataset)
 positive_dataset = tf.data.Dataset.from_tensor_slices(positive_images)
 
 # To generate the list of negative images, let's randomize the list of
@@ -146,7 +146,6 @@ negative_dataset = negative_dataset.shuffle(buffer_size=4096)
 dataset = tf.data.Dataset.zip((anchor_dataset, positive_dataset, negative_dataset))
 dataset = dataset.shuffle(buffer_size=1024)
 dataset = dataset.map(preprocess_triplets)
-print("dataset", dataset)
 
 # Let's now split our dataset in train and validation.
 train_dataset = dataset.take(round(image_count * 0.8))
@@ -247,7 +246,6 @@ class DistanceLayer(layers.Layer):
 
 
 anchor_input = layers.Input(name="anchor", shape=target_shape + (3,))
-print("anchor input", anchor_input)
 positive_input = layers.Input(name="positive", shape=target_shape + (3,))
 negative_input = layers.Input(name="negative", shape=target_shape + (3,))
 
