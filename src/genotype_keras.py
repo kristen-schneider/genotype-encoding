@@ -9,67 +9,63 @@ from tensorflow.keras import Model
 from tensorflow.keras import optimizers
 from tensorflow.keras.applications import resnet
 
+# data files 
 #data_dir = '/Users/kristen/PycharmProjects/genotype-encoding/data/'
 data_dir = '/home/sdp/genotype-encoding/data/'
-
 encoded_genotype_file = data_dir + 'genotype.txt'
 encoded_positive_file = data_dir + 'positive.txt'
 encoded_negative_file = data_dir + 'negative.txt'
 
-# loading vectors (anchor, positive, and negative)
-genotype_vectors = encoded_utils.read_encoded_file(encoded_genotype_file)
-positive_vectors = encoded_utils.read_encoded_file(encoded_positive_file)
-negative_vectors = encoded_utils.read_encoded_file(encoded_negative_file)
+# a list of lists [[1,0,0,0,1...],[0,0,1,2,0,...], ...[]]
+genotype_vectors = encoded_utils.read_encoded_file(encoded_genotype_file) # genotype data
+positive_vectors = encoded_utils.read_encoded_file(encoded_positive_file) # matches genotype data
+negative_vectors = encoded_utils.read_encoded_file(encoded_negative_file) # all zeros
 
 # counting variants and samples for dimesions of dataset
 # ValueError: Input size must be at least 32x32
 num_variants = encoded_utils.count_variants(encoded_genotype_file)
-print(type(num_variants), num_variants)
+print("Num Variants: ", num_variants)
 num_samples = len(genotype_vectors)
-print(type(num_samples), num_samples)
+print("Num Samples: ", num_samples)
 target_shape = (num_variants, 32)
-print(type(target_shape), target_shape)
+print("Target Shape: ", target_shape)
 
 # making dataset objects from lists
 genotype_dataset = tf.data.Dataset.from_tensor_slices(genotype_vectors)
-print("genotype dataset", genotype_dataset)
+print("Genotype Dataset:\n")
+for i in genotype_dataset:
+    print(i)
 positive_dataset = tf.data.Dataset.from_tensor_slices(positive_vectors)
-negative_dataset = tf.data.Dataset.from_tensor_slices(positive_vectors)
+negative_dataset = tf.data.Dataset.from_tensor_slices(negative_vectors)
 
-def preprocess_image(filename):
-    """
-    Load the specified file as a JPEG image, preprocess it and
-    resize it to the target shape.
-    """
+#def preprocess_image(filename):
+#    """
+#    Load the specified file as a JPEG image, preprocess it and
+#    resize it to the target shape.
+#    """
+#
+#    image_string = tf.io.read_file(filename)
+#    image = tf.image.decode_jpeg(image_string, channels=3)
+#    image = tf.image.convert_image_dtype(image, tf.float32)
+#    image = tf.image.resize(image, target_shape)
+#    return image
 
-    image_string = tf.io.read_file(filename)
-    image = tf.image.decode_jpeg(image_string, channels=3)
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, target_shape)
-    return image
 
-
-def preprocess_triplets(anchor, positive, negative):
-    """
-    Given the filenames corresponding to the three images, load and
-    preprocess them.
-    """
-    test = 'x'
-    return (
-        preprocess_image(anchor),
-        preprocess_image(positive),
-        preprocess_image(negative),
-    )
-
-#DEBUG
-#print('Genotype vectors\n')
-#for i in genotype_dataset: print(i)
-#for i in positive_dataset: print(i)
-#for i in negative_dataset: print(i)
+#def preprocess_triplets(anchor, positive, negative):
+#    """
+#    Given the filenames corresponding to the three images, load and
+#    preprocess them.
+#    """
+#    test = 'x'
+#    return (
+#        preprocess_image(anchor),
+#        preprocess_image(positive),
+#        preprocess_image(negative),
+#    )
 
 dataset = tf.data.Dataset.zip((genotype_dataset, positive_dataset, negative_dataset))
 dataset = dataset.shuffle(buffer_size=1024)
-dataset = dataset.map(preprocess_triplets)
+#dataset = dataset.map(preprocess_triplets)
 print("dataset", dataset)
 
 # split dataset into train and validation
@@ -112,9 +108,11 @@ class DistanceLayer(layers.Layer):
         gn_distance = tf.reduce_sum(tf.square(genotype - negative), -1)
         return (gp_distance, gn_distance)
 
-print(target_shape)
 genotype_input = layers.Input(name='genotype', shape=target_shape + (3,))
-print("genotype input", genotype_input)
+print("Genotype Input:\n")
+for i in genotype_input:
+    print(i)
+
 positive_input = layers.Input(name='positive', shape=target_shape + (3,))
 negative_input = layers.Input(name='negative', shape=target_shape + (3,))
 
