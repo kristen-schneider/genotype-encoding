@@ -26,20 +26,12 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     dataset = build.build_dataset(CNN_input_file)
+    print('Done.')
+    print()
     for element in dataset:
         print(element)    
 
-#def build_dataset(CNN_input_file):
-#    f = open(CNN_input_file, 'r')
-#    data = []
-#    for line in f:
-#        A = line.strip().split()
-#        data.append(A)
-#    
-#    dataset = tf.data.Dataset.from_tensor_slices(data)
-#    return dataset
-
-
+    
 #    CNN(int(num_variants), int(num_distances))
 #
 #def CNN(num_variants, num_distances):
