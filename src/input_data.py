@@ -3,6 +3,11 @@ encoded_file = '/home/sdp/precision-medicine/data/encoded/new.encoded.txt'
 IBD_file = '/home/sdp/precision-medicine/data/IBD/ALL.chr14.genome'
 cnn_file = '/home/sdp/precision-medicine/data/CNN.input.small.txt'
 
+'''
+Takes plink.genome file, vcf file, and encoded file and outputs to new format for input to CNN.
+New format:
+    sample1 sample2 distance
+'''
 def main():
     samples = sample_name_index(vcf_file)
     samples_encoding = sample_encoding_dict(samples, encoded_file)
