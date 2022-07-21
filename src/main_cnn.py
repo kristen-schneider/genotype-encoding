@@ -26,11 +26,11 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     dataset = build.build_dataset(CNN_input_file)
-    dataset.map(lambda x: x*2)
+    # dataset.map(lambda x: x*2)
     print('Done.')
     print()
-    for element in dataset:
-        print(element)    
+    # for element in dataset:
+    #     print(element)
     
     #input_shape = (batch, length_vector, channels)
     # can test with this
@@ -39,7 +39,7 @@ def main():
     #y = net(x)
     
 #    CNN(int(num_variants), int(num_distances))
-#
+
 #def CNN(num_variants, num_distances):
 #    model = keras.models.Sequential()
 #    model.add(Conv1D(1, kernel_size=num_variants, input_shape=(num_distances, 1)))
