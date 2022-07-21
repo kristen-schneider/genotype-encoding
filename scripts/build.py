@@ -3,6 +3,7 @@ import tensorflow as tf
 def build_dataset(CNN_input_file):
     """
     reads input file and builds dataset
+    ** need to add filtering to get rid of certain invalid or unwanted data
     """
     # open file and read 3 columns into three tensorflow objects
     f = open(CNN_input_file, 'r')

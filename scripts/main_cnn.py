@@ -1,5 +1,7 @@
-import utils
 import build
+import model
+import utils
+
 
 import tensorflow as tf
 from tensorflow import keras
@@ -31,13 +33,16 @@ def main():
     print()
     # for element in dataset:
     #     print(element)
-    
+
+    # build model
+    vector_size = num_variants
+    model.CNN(vector_size)
+
     #input_shape = (batch, length_vector, channels)
     # can test with this
     #x = tf.random.normal(input_shape)
     #net = get_cnn() # cnn defined here
     #y = net(x)
-    
-#    CNN(int(num_variants), int(num_distances))
+
 if __name__ == '__main__':
     main()
