@@ -26,11 +26,17 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     dataset = build.build_dataset(CNN_input_file)
+    dataset.map(lambda x: x*2)
     print('Done.')
     print()
     for element in dataset:
         print(element)    
-
+    
+    #input_shape = (batch, length_vector, channels)
+    # can test with this
+    #x = tf.random.normal(input_shape)
+    #net = get_cnn() # cnn defined here
+    #y = net(x)
     
 #    CNN(int(num_variants), int(num_distances))
 #
