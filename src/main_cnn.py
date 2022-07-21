@@ -39,11 +39,5 @@ def main():
     #y = net(x)
     
 #    CNN(int(num_variants), int(num_distances))
-
-#def CNN(num_variants, num_distances):
-#    model = keras.models.Sequential()
-#    model.add(Conv1D(1, kernel_size=num_variants, input_shape=(num_distances, 1)))
-#    model.summary()
-#
 if __name__ == '__main__':
     main()

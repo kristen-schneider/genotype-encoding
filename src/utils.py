@@ -1,9 +1,9 @@
-'''
-find dimensions of incoming data
-    number of variants = size of input vector
-    number of lines = number of distances computed
-'''
 def CNN_input_dimensions(tf_record):
+    """
+    find dimensions of incoming data
+        number of variants = size of input vector
+        number of lines = number of distances computed
+    """
     num_variants = -1
     num_lines = -1
 

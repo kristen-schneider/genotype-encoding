@@ -1,10 +1,9 @@
 import tensorflow as tf
 
-'''
-reads input file and builds dataset
-'''
 def build_dataset(CNN_input_file):
-
+    """
+    reads input file and builds dataset
+    """
     # open file and read 3 columns into three tensorflow objects
     f = open(CNN_input_file, 'r')
     header = f.readline()
