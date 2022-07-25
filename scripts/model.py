@@ -27,13 +27,14 @@ def base_cnn(vector_size):
 
     return base_cnn_model
 
-# class DistanceLayer(tf.keras.layers.Layer):
-#     """
-#     Computes distance between two vectors with simple euclidean distance
-#     """
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-#
-#     def call(self, sample1, sample2):
-#         distance = tf.reduce_sum(tf.norm(sample1-sample2, ord='euclidean'))
-#         return distance
+class DistanceLayer(tf.keras.layers.Layer):
+    """
+    Computes distance between two vectors with simple euclidean distance
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def call(self, sample1, sample2):
+        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
+        return distance

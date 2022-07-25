@@ -2,27 +2,13 @@ import dataset
 import model
 import utils
 
-
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.layers import Conv1D
 
 CNN_input_file = '../data/fake_input.txt'
 sample1_file = '../data/fake_sample1.txt'
 sample2_file = '../data/fake_sample2.txt'
 distances_file = '../data/fake_distances.txt'
-
-class DistanceLayer(tf.keras.layers.Layer):
-    """
-    Computes distance between two vectors with simple euclidean distance
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def call(self, sample1, sample2):
-        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
-        return distance
 
 def main():
 
@@ -59,10 +45,13 @@ def main():
     sample1_input = tf.keras.layers.Input(name="sample1", shape=vector_size)
     sample2_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
 
-    distances = DistanceLayer()(
+    distances = model.DistanceLayer()(
         embedding(sample1_input),
         embedding(sample2_input)
     )
+
+    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=distances)
+
 
     # input_shape = (batch, length_vector, channels)
     # can test with this
