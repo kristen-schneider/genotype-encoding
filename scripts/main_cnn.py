@@ -12,6 +12,18 @@ sample1_file = '../data/fake_sample1.txt'
 sample2_file = '../data/fake_sample2.txt'
 distances_file = '../data/fake_distances.txt'
 
+class DistanceLayer(tf.keras.layers.Layer):
+    """
+    Computes distance between two vectors with simple euclidean distance
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def call(self, sample1, sample2):
+        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
+        return distance
+
 def main():
 
     # find dimensions of incoming data
@@ -45,23 +57,12 @@ def main():
 
     # sample 1 and 2 inputs
     sample1_input = tf.keras.layers.Input(name="sample1", shape=vector_size)
-    sample1_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
+    sample2_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
 
     distances = DistanceLayer()(
-        embedding(sample1_input, sample2_file)
+        embedding(sample1_input),
+        embedding(sample2_input)
     )
-
-class DistanceLayer(tf.keras.layers.Layer):
-    """
-    Computes distance between two vectors with simple euclidean distance
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def call(self, sample1, sample2):
-        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
-        return distance
 
     # input_shape = (batch, length_vector, channels)
     # can test with this
