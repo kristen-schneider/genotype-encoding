@@ -38,3 +38,50 @@ class DistanceLayer(tf.keras.layers.Layer):
     def call(self, sample1, sample2):
         distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
         return distance
+
+# class SiameseModel(tf.keras.Model):
+#     """
+#     Computes loss using two embeddings proces by base CNN
+#     """
+#     def __init__(self, siamese_network):
+#         super(SiameseModel, self).__init__()
+#         self.siamese_network = siamese_network
+#         self.loss_tracker = tf.keras.metrics.Mean(name="loss")
+#
+#     def call(self, inputs):
+#         return self.siamese_network(inputs)
+#
+#     def train_step(self, data):
+#         """
+#
+#         :param data: sample1, sample2, distances
+#         :return:
+#         """
+#         with tf.GradientTape() as tape:
+#             loss = self._compute_loss(data)
+#
+#         gradients = tape.gradient(loss, self.siamese_network.trainable_weights)
+#
+#         self.optimizer.apply_gradients(
+#             zip(gradients, self.siamese_network.trainable_weights)
+#         )
+#
+#         self.loss_tracker.update_state(loss)
+#         return {"loss": self.loss_tracker.result()}
+#
+#     def test_step(self, data):
+#         loss = self._compute_loss(data)
+#
+#         self.loss_tracker.update_state(loss)
+#         return {"loss": self.loss_tracker.result()}
+#
+#     def _compute_loss(self, data):
+#         distance = self.siamese_network(data)
+#         loss = 0
+#         # loss = ap_distance - an_distance
+#         # loss = tf.maximum(loss + self.margin, 0.0)
+#         return loss
+#
+#     @property
+#     def metrics(self):
+#         return [self.loss_tracker]

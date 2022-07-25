@@ -1,3 +1,11 @@
+"""
+Title: Similarity between two vectors for IBD
+Authors: Kristen Schneider
+Date created: 2022/07/20
+Last modified: 2022/07/20
+Description: Inspired by [code](https://keras.io/examples/vision/siamese_network/) written by [Hazem Essam](https://twitter.com/hazemessamm) and [Santiago L. Valdarrama](https://twitter.com/svpino)
+"""
+
 import dataset
 import model
 import utils
@@ -52,6 +60,9 @@ def main():
 
     siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=distances)
 
+    # siamese_model = model.SiameseModel(siamese_network)
+    # siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
+    # siamese_model.fit(ds, epochs=10, validation_data=ds)
 
     # input_shape = (batch, length_vector, channels)
     # can test with this
