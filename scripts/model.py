@@ -1,7 +1,21 @@
-import keras.models
 import tensorflow as tf
-from tensorflow.keras import layers
-from tensorflow.keras.layers import Conv1D
+from tensorflow import keras
+import keras.models
+from keras import layers
+from keras.layers import Conv1D
+
+def functional_model(vector_size):
+    inputs = keras.Input(shape=(vector_size,))
+    dense = layers.Dense(64, activation="relu")
+    x = dense(inputs)
+    x = layers.Dense(64, activation="relu")(x)
+    outputs = layers.Dense(10)(x)
+    model = keras.Model(inputs=inputs, outputs=outputs, name="encoding_model")
+    model.summary()
+    # keras.utils.plot_model(model, "my_first_model_with_shape_info.png", show_shapes=True)
+    # x = layers.GlobalAveragePooling1D()(inputs)
+    # outputs = layers.Dense(1)(x)
+    # model = keras.Model(inputs, outputs)
 
 def CNN(vector_size, num_distances):
     """
@@ -10,12 +24,6 @@ def CNN(vector_size, num_distances):
     model.add(Conv1D(1, kernel_size=num_variants, input_shape=(num_distances, 1)))
     model.summary()
     """
-
-    inputs = keras.Input(shape=(vector_size,))
-    x = layers.GlobalAveragePooling1D()(inputs)
-    outputs = layers.Dense(1)(x)
-    model = keras.Model(inputs, outputs)
-
     # model = keras.models.Sequential
     inputs = keras.Input(shape=(vector_size,))
     model = inputs

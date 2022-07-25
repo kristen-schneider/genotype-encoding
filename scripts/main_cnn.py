@@ -37,7 +37,8 @@ def main():
 
     # build model
     vector_size = num_variants
-    m = model.CNN(vector_size, num_distances)
+    model.functional_model(vector_size)
+    # m = model.CNN(vector_size, num_distances)
     # m.build()
     # m.compile()
     # m.summary()
