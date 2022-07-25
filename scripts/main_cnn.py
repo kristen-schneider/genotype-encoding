@@ -43,6 +43,25 @@ def main():
     # get embedding for a vector from model
     embedding = tf.keras.Model(base_cnn.input, base_cnn.output, name="embedding")
 
+    # sample 1 and 2 inputs
+    sample1_input = tf.keras.layers.Input(name="sample1", shape=vector_size)
+    sample1_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
+
+    distances = DistanceLayer()(
+        embedding(sample1_input, sample2_file)
+    )
+
+class DistanceLayer(tf.keras.layers.Layer):
+    """
+    Computes distance between two vectors with simple euclidean distance
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def call(self, sample1, sample2):
+        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
+        return distance
 
     # input_shape = (batch, length_vector, channels)
     # can test with this
