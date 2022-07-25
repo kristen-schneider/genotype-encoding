@@ -1,11 +1,12 @@
 import tensorflow as tf
 
-def build_dataset(CNN_input_file):
+def build_dataset_from_file(CNN_input_file):
     """
-    reads input file and builds dataset
-    ** need to add filtering to get rid of certain invalid or unwanted data
+    Builds a tensorflow dataset object from file with 3 columns:
+    sample1, sample2, IBD_distance
+    :param CNN_input_file:
+    :return: tensorflow dataset object for input to cnn model
     """
-    # open file and read 3 columns into three tensorflow objects
     f = open(CNN_input_file, 'r')
     header = f.readline()
     sample1_data = []

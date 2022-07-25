@@ -1,4 +1,4 @@
-import build
+import dataset
 import model
 import utils
 
@@ -27,7 +27,7 @@ def main():
     #   tf.Dataset works from memory arrays
     #   tfrecord binary format reads from file
     print('Building dataset...')
-    dataset = build.build_dataset(CNN_input_file)
+    ds = dataset.build_dataset_from_file(CNN_input_file)
     # for d in dataset: print(d)
     # for s1, s2, d in dataset:
     #     print(s1)
@@ -35,18 +35,20 @@ def main():
     print('Done.')
     print()
 
-    # build model
+    # build base CNN model
     vector_size = num_variants
-    model.functional_model(vector_size)
-    # m = model.CNN(vector_size, num_distances)
-    # m.build()
-    # m.compile()
-    # m.summary()
-    #input_shape = (batch, length_vector, channels)
+    base_cnn = model.base_cnn(vector_size)
+    base_cnn.summary()
+
+    # get embedding for a vector from model
+    embedding = tf.keras.Model(base_cnn.input, base_cnn.output, name="embedding")
+
+
+    # input_shape = (batch, length_vector, channels)
     # can test with this
-    #x = tf.random.normal(input_shape)
-    #net = get_cnn() # cnn defined here
-    #y = net(x)
+    # x = tf.random.normal(input_shape)
+    # net = get_cnn() # cnn defined here
+    # y = net(x)
 
 if __name__ == '__main__':
     main()
