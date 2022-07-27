@@ -61,7 +61,7 @@ def main():
     distances = model.DistanceLayer()(
         embedding(sample1_input),
         embedding(sample2_input),
-        target_distance_input,
+        embedding(target_distance_input),
     )
 
     siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input, target_distance_input], outputs=distances)
