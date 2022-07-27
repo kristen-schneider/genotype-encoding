@@ -35,6 +35,26 @@ def build_dataset_from_file(CNN_input_file):
     distances_ds_float = distances_ds.map(lambda x: float(x))
 
     # zip 3 tensor items together into one dataset
-    full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float))#, distances_ds_float))
+    full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
 
     return full_ds
+
+def target_distances(CNN_input_file):
+    """
+        Builds a tensorflow dataset object from file for just target IBD_distance
+        :param CNN_input_file:
+        :return: tensor flow object for target distances
+        """
+    f = open(CNN_input_file, 'r')
+    header = f.readline()
+    distances_data = []
+    for line in f:
+        A = line.strip().split()
+        distances_data.append(A[2])
+
+    # distance dataset as own tensorflow object
+    distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
+    # map distance values to float
+    distances_ds_float = distances_ds.map(lambda x: float(x))
+
+    return tf.data.Dataset.zip(distances_ds_float)

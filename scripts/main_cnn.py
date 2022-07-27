@@ -41,6 +41,10 @@ def main():
     print('Done.')
     print()
 
+    # print('Retrieving target distances...')
+    # target_distances = dataset.target_distances(CNN_input_file)
+    # print('Done.')
+
     # build base CNN model
     vector_size = num_variants
     base_cnn = model.base_cnn(vector_size)
@@ -52,17 +56,19 @@ def main():
     # sample 1 and 2 inputs
     sample1_input = tf.keras.layers.Input(name="sample1", shape=vector_size)
     sample2_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
+    target_distance_input = tf.keras.layers.Input(name="target_distances", shape=num_distances)
 
     distances = model.DistanceLayer()(
         embedding(sample1_input),
-        embedding(sample2_input)
+        embedding(sample2_input),
+        target_distance_input,
     )
 
-    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=distances)
+    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input, target_distance_input], outputs=distances)
 
-    # siamese_model = model.SiameseModel(siamese_network)
-    # siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
-    # siamese_model.fit(ds, epochs=10, validation_data=ds)
+    siamese_model = model.SiameseModel(siamese_network)
+    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
+    siamese_model.fit(ds, epochs=10, validation_data=ds)
 
     # input_shape = (batch, length_vector, channels)
     # can test with this
