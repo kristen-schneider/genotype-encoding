@@ -16,17 +16,19 @@ def base_cnn(vector_size):
     # input layer
     inputs = tf.keras.Input(shape=(vector_size, 1))
 
-    # layers
-    x = tf.keras.layers.Conv1d(filters=6, kernal_size=3, activation="relu")(inputs)
+    # Layers
+    x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(inputs)
     x = tf.keras.layers.BatchNormalization()(x)
-    x = tf.keras.layers.Conv1d(filters=6, kernal_size=3, activation="relu")(x)
+    x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(x)
     x = tf.keras.layers.BatchNormalization()(x)
+
     x = tf.keras.layers.GlobalAveragePooling1D()(x)
     # dense1 = tf.keras.layers.Dense(40, activation="relu", name="one")(inputs)
     # dense2 = tf.keras.layers.Dense(20, activation="relu", name="two")(dense1)
 
-    # outputs
-    outputs = tf.keras.layers.Conv1d(filters=6, kernal_size=3, activation="relu")(x)
+    # Outputs
+    outputs = tf.keras.layers.Dense(20)(x)
+    # outputs = tf.keras.layers.Dense(20)(x)
 
     # base CNN model
     base_cnn_model = tf.keras.Model(inputs=inputs, outputs=outputs, name="base_cnn")
