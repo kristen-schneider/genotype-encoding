@@ -48,10 +48,10 @@ def main():
     # build base CNN model
     vector_size = num_variants
     base_cnn = model.base_cnn(vector_size)
-    base_cnn.summary()
+    # base_cnn.summary()
 
     # get embedding for a vector from model
-    embedding = tf.keras.Model(base_cnn.input, base_cnn.output, name="embedding")
+    # baseCNN = tf.keras.Model(base_cnn.input, base_cnn.output, name="embedding")
 
     # # sample 1 and 2 inputs
 
@@ -60,21 +60,21 @@ def main():
     #     sample2_input = s2
     #     target_distance_input = td
 
-    # sample1_input = base_cnn.input
-    # sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
-    # sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
+    # sample1_input = base_cnn
+    ## can encapsulate in own function
+    sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
+    sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
 
     predicted_distances = model.DistanceLayer()(
-        sample1_input,
-        sample2_input
+        base_cnn(sample1_input),
+        base_cnn(sample2_input)
     )
-
     siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=predicted_distances)
+    ##
 
     siamese_model = model.SiameseModel(siamese_network)
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
     siamese_model.fit(ds, epochs=10)
-    # siamese_model.fit(ds, epochs=10, validation_data=ds)
 
     # input_shape = (batch, length_vector, channels)
     # can test with this

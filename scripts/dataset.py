@@ -38,7 +38,8 @@ def build_dataset_from_file(CNN_input_file):
     # zip 3 tensor items together into one dataset
     full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
 
-    return full_ds
+    full_ds_batch = full_ds.batch(2)
+    return full_ds_batch
 
 def target_distances(CNN_input_file):
     """
