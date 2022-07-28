@@ -29,13 +29,14 @@ def build_dataset_from_file(CNN_input_file):
     sample1_ds = tf.data.Dataset.from_tensor_slices(sample1_data)
     sample2_ds = tf.data.Dataset.from_tensor_slices(sample2_data)
     distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
+
     # map distance values to float
     sample1_ds_float = sample1_ds.map(lambda x: float(x))
     sample2_ds_float = sample2_ds.map(lambda x: float(x))
     distances_ds_float = distances_ds.map(lambda x: float(x))
 
     # zip 3 tensor items together into one dataset
-    full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float))#, distances_ds_float))
+    full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
 
     return full_ds
 

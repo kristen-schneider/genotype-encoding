@@ -34,8 +34,8 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     ds = dataset.build_dataset_from_file(CNN_input_file)
-    # for d in dataset: print(d)
-    # for s1, s2, d in dataset:
+    # for d in ds: print(d)
+    # for s1, s2, d in ds:
     #     print(s1)
     #     print(s1.shape)
     print('Done.')
@@ -54,15 +54,22 @@ def main():
     embedding = tf.keras.Model(base_cnn.input, base_cnn.output, name="embedding")
 
     # # sample 1 and 2 inputs
-    # sample1_input = tf.keras.layers.Input(name="sample1", shape=vector_size)
-    # sample2_input = tf.keras.layers.Input(name="sample2", shape=vector_size)
-    # target_distance_input = tf.keras.layers.Input(name="target_distances", shape=num_distances)
 
-    distances = model.DistanceLayer()(
-        tf.data.Dataset.range()
+    # for s1, s2, td in ds:
+    #     sample1_input = s1
+    #     sample2_input = s2
+    #     target_distance_input = td
+
+    # sample1_input = base_cnn.input
+    # sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
+    # sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
+
+    predicted_distances = model.DistanceLayer()(
+        sample1_input,
+        sample2_input
     )
 
-    siamese_network = tf.keras.Model(inputs=[base_cnn.input], outputs=distances)
+    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=predicted_distances)
 
     siamese_model = model.SiameseModel(siamese_network)
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
