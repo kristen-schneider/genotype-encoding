@@ -17,10 +17,13 @@ def base_cnn(vector_size):
     inputs = tf.keras.Input(shape=(vector_size,))
 
     # layers
-    dense1 = tf.keras.layers.Dense(64, activation="relu")(inputs)
+    dense1 = tf.keras.layers.Dense(40, activation="relu", name="one")(inputs)
+    dense1 = tf.keras.layers.BatchNormalization()(dense1)
+    dense2 = tf.keras.layers.Dense(20, activation="relu", name="two")(dense1)
+    dense2 = tf.keras.layers.BatchNormalization()(dense2)
 
     # outputs
-    outputs = tf.keras.layers.Dense(10)(dense1)
+    outputs = tf.keras.layers.Dense(20)(dense2)
 
     # base CNN model
     base_cnn_model = tf.keras.Model(inputs=inputs, outputs=outputs, name="base_cnn")
@@ -35,7 +38,7 @@ class DistanceLayer(tf.keras.layers.Layer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def call(self, sample1, sample2, target_distance):
+    def call(self, sample1, sample2):
         distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
         return distance
 
