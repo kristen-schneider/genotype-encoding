@@ -78,14 +78,11 @@ class SiameseModel(tf.keras.Model):
         return {"loss": self.loss_tracker.result()}
 
     def _compute_loss(self, data):
-        distance = self.siamese_network(data)
-        for d in distance:
-            print(d)
-        # for td in target_distances:
-        #     print(td)
-        loss = 0
-        # loss = ap_distance - an_distance
-        # loss = tf.maximum(loss + self.margin, 0.0)
+        predicted_distance = self.siamese_network(data)
+        target_distances = data[3]
+        loss = tf.keras.metrics.mean_squared_error(
+            predicted_distance, target_distances
+        )
         return loss
 
     @property
