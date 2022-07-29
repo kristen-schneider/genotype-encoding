@@ -1,5 +1,3 @@
 src/__pycache__/
-data/left.zip
-data/right.zip
-data/simulated_genotypes.txt
-data/simulated_negatives.txt
+data/CNN.input.test
+
