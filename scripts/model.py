@@ -1,22 +1,17 @@
 import tensorflow as tf
-# from tensorflow.keras import layers
-# from tensorflow.keras import Model
-# from tensorflow.keras import models
 
-# from tensorflow import keras
-# import tensorflow.keras.models
-# from keras.layers import Conv1D
-
-def base_cnn(vector_size):
+def build_base_cnn(vector_size):
     """
     Builds a base CNN with provided vector_size
     :param vector_size:
     :return: base CNN (tf.keras.Model)
     """
-    # input layer
+    # Input Layer
     inputs = tf.keras.Input(shape=(vector_size, 1))
 
-    # Layers
+    # Convolution Layers
+    ## filters = number of filters
+    ## kernel_size = length of convolution window
     x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(inputs)
     x = tf.keras.layers.BatchNormalization()(x)
     x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(x)
@@ -84,15 +79,16 @@ class SiameseModel(tf.keras.Model):
         self.loss_tracker.update_state(loss)
         return {"loss": self.loss_tracker.result()}
 
-    def test_step(self, data):
-        loss = self._compute_loss(data)
+    def test_step(self, data, target_distances):
+        loss = self._compute_loss(data, target_distances)
 
         self.loss_tracker.update_state(loss)
         return {"loss": self.loss_tracker.result()}
 
     def _compute_loss(self, sample_data, target_distances):
-        print(self.siamese_network.summary())
+        # predicted_distance = self.siamese_network(sample_data)
         predicted_distance = self.siamese_network(sample_data)
+
         loss = tf.keras.metrics.mean_squared_error(
             predicted_distance, target_distances
         )
@@ -101,3 +97,23 @@ class SiameseModel(tf.keras.Model):
     @property
     def metrics(self):
         return [self.loss_tracker]
+
+
+def build_siamese_network(vector_size):
+    """
+    Builds siamese network
+    :param vector_size: size of the sample inputs
+    :return: siamese network with two inputs (s1, s2) and one output (predicted distance)
+    """
+    base_cnn = build_base_cnn(vector_size)
+
+    sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
+    sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
+
+    predicted_distances = DistanceLayer()(
+        base_cnn(sample1_input),
+        base_cnn(sample2_input)
+    )
+    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input],
+                                     outputs=predicted_distances)
+    return siamese_network
