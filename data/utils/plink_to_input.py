@@ -1,5 +1,5 @@
 vcf_file = '/home/sdp/precision-medicine/data/vcf/ALL.chr14.shapeit2_integrated_snvindels_v2a_27022019.GRCh38.phased.vcf'
-encoded_file = '/home/sdp/precision-medicine/data/encoded/new.encoded.txt'
+encoded_file = '/home/sdp/precision-medicine/data/encoded/ALL.chr14.encoded'
 IBD_file = '/home/sdp/precision-medicine/data/IBD/ALL.chr14.genome'
 cnn_file = '/home/sdp/precision-medicine/data/CNN.input.small.txt'
 
@@ -28,10 +28,7 @@ def samples_IBD_dict(IBD_file, samples_encoding, cnn_file):
         try:
             sample1_encoding = samples_encoding[sample1]
             sample2_encoding = samples_encoding[sample2]
-            #new_string = sample1_encoding.strip() + '\t'\
-            #             + sample2_encoding.strip() + '\t'\
-            #             + distance.strip() + '\n'
-            
+
             new_string = sample1 + '\t' + sample2 + '\t' + distance + '\n'
             o.write(new_string)
         except KeyError:
