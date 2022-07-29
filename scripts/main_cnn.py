@@ -37,22 +37,8 @@ def main():
     print('Done.')
     print()
 
-    # build base CNN model
     vector_size = num_variants
-    # base_cnn = model.build_base_cnn(vector_size)
-
-    ## can encapsulate in own function
-    # sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
-    # sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
-    #
-    # predicted_distances = model.DistanceLayer()(
-    #     base_cnn(sample1_input),
-    #     base_cnn(sample2_input)
-    # )
-    # siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input], outputs=predicted_distances)
-    ##
     siamese_network = model.build_siamese_network(vector_size)
-
     siamese_model = model.SiameseModel(siamese_network)
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
     siamese_model.fit(ds, epochs=3)
