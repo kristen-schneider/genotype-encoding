@@ -6,8 +6,8 @@ Last modified: 2022/07/20
 Description: Inspired by [code](https://keras.io/examples/vision/siamese_network/) written by [Hazem Essam](https://twitter.com/hazemessamm) and [Santiago L. Valdarrama](https://twitter.com/svpino)
 """
 
-import dataset
-import tfrecord_dataset
+import basic_ds
+import tfrecord_ds
 import model
 import utils
 import write_tfrecord
@@ -15,9 +15,7 @@ import write_tfrecord
 import tensorflow as tf
 
 CNN_input_file = '../data/fake_input.txt'
-sample1_file = '../data/fake_sample1.txt'
-sample2_file = '../data/fake_sample2.txt'
-distances_file = '../data/fake_distances.txt'
+tf_records_dir = '../data/tfrecords/'
 
 def main():
 
@@ -34,10 +32,10 @@ def main():
     #   tf.Dataset works from memory arrays
     #   tfrecord binary format reads from file
     print('Building dataset...')
-    dataset = tfrecord_dataset.DataWriter.get_basic_dataset(CNN_input_file
-        )
-    # ds = dataset.build_dataset_from_file(CNN_input_file)
-    # write_tfrecord.to_tfrecord(ds)
+    tfr = tfrecord_ds.DataWriter()
+    basic_dataset = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
+
+    # ds = basic_ds.build_dataset_from_file(CNN_input_file)
     print('Done.')
     print()
 

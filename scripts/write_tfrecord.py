@@ -42,7 +42,7 @@ def serialize_example(sample1, sample2, distances):
   # Create a dictionary mapping the feature name to the tf.train.Example-compatible
   # data type.
 
-  tf.io.serialize_tensor(DataWriter._load_image(filename))),
+  # tf.io.serialize_tensor(DataWriter._load_image(filename))),
   feature = {
       'sample1': utils._int64_feature(sample1),
       'sample2': utils._int64_feature(sample2),
