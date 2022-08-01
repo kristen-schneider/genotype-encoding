@@ -13,20 +13,22 @@ class DataWriter:
         self.num_classes = num_classes
 
     @staticmethod
+    def _bytes_feature(value):
+        if isinstance(value, tf.Tensor):
+            value = value.numpy()
+        elif not isinstance(value, bytes):
+            value = value.encode()
+        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+    @staticmethod
     def _int64_feature(value):
         if not isinstance(value, list):
             value = [value]
         return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
 
     @staticmethod
-    def _bytes_feature(value):
-        # If the value is an eager tensor BytesList
-        # won't unpack a string from an EagerTensor.
-        if isinstance(value, tf.Tensor):
-            value = value.numpy()
-        elif not isinstance(value, bytes):
-            value = value.encode()
-        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+    def _float_feature(value):
+        return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
     @staticmethod
     def get_basic_dataset(input_file):
@@ -57,20 +59,18 @@ class DataWriter:
         distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
 
         # map sample encodings to list of ints and distance values to float
-        sample1_ds_float = sample1_ds.map(lambda x: int(x))
-        sample2_ds_float = sample2_ds.map(lambda x: int(x))
-        distances_ds_float = distances_ds.map(lambda x: float(x))
+        sample1_int = sample1_ds.map(lambda x: int(x))
+        sample2_int = sample2_ds.map(lambda x: int(x))
+        distances_float = distances_ds.map(lambda x: float(x))
 
         # zip 3 tensor items together into one dataset
-        full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
+        full_ds = tf.data.Dataset.zip((sample1_int, sample2_int, distances_float))
         # puts 1 element into a batch
-        full_ds_batch = full_ds.batch(2)
+        full_ds_batch = full_ds.batch(1)
         return full_ds_batch
-        # return basic_ds.build_dataset_from_file(input_file)
-
 
     @staticmethod
-    def _serialize_example(filename, label):
+    def _serialize_example(sample1, sample2, distance):
         """
         given a filepath to an image (label contained in filename),
         serialize the (image, label)
@@ -78,10 +78,9 @@ class DataWriter:
         example = tf.train.Example(
             features=tf.train.Features(
                 feature={
-                    'filename': DataWriter._bytes_feature(filename),
-                    'image': DataWriter._bytes_feature(
-                        tf.io.serialize_tensor(DataWriter._load_image(filename))),
-                    'label': DataWriter._int64_feature(label),
+                    'sample1': DataWriter._int64_feature(sample1),
+                    'sample2': DataWriter._int64_feature(sample2),
+                    'distance': DataWriter._float_feature(distance),
                 }
             )
         )
