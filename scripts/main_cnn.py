@@ -9,6 +9,7 @@ Description: Inspired by [code](https://keras.io/examples/vision/siamese_network
 import dataset
 import model
 import utils
+import write_tfrecord
 
 import tensorflow as tf
 
@@ -33,15 +34,16 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     ds = dataset.build_dataset_from_file(CNN_input_file)
-    # for d in ds: print(d)
+    write_tfrecord.to_tfrecord(ds)
     print('Done.')
     print()
 
-    vector_size = num_variants
-    siamese_network = model.build_siamese_network(vector_size)
-    siamese_model = model.SiameseModel(siamese_network)
-    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
-    siamese_model.fit(ds, epochs=3)
+    # print('Running...')
+    # vector_size = num_variants
+    # siamese_network = model.build_siamese_network(vector_size)
+    # siamese_model = model.SiameseModel(siamese_network)
+    # siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
+    # siamese_model.fit(ds, epochs=3)
 
 if __name__ == '__main__':
     main()

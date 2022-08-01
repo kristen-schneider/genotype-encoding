@@ -17,10 +17,10 @@ def build_dataset_from_file(CNN_input_file):
         currS2 = []
         A = line.strip().split()
         for i in A[0]:
-            currS1.append(float(i))
+            currS1.append(int(i))
         sample1_data.append(currS1)
         for j in A[1]:
-            currS2.append(float(j))
+            currS2.append(int(j))
         sample2_data.append(currS1)
 
         distances_data.append(A[2])
@@ -31,11 +31,12 @@ def build_dataset_from_file(CNN_input_file):
     distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
 
     # map distance values to float
-    sample1_ds_float = sample1_ds.map(lambda x: float(x))
-    sample2_ds_float = sample2_ds.map(lambda x: float(x))
+    sample1_ds_float = sample1_ds.map(lambda x: int(x))
+    sample2_ds_float = sample2_ds.map(lambda x: int(x))
     distances_ds_float = distances_ds.map(lambda x: float(x))
 
     # zip 3 tensor items together into one dataset
     full_ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
-    full_ds_batch = full_ds.batch(2)
+    # puts 1 element into a batch
+    full_ds_batch = full_ds.batch(1)
     return full_ds_batch
