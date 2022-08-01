@@ -72,8 +72,7 @@ class DataWriter:
     @staticmethod
     def _serialize_example(sample1, sample2, distance):
         """
-        given a filepath to an image (label contained in filename),
-        serialize the (image, label)
+        given an input tensor (s1, s2, distance), serialize the input
         """
         example = tf.train.Example(
             features=tf.train.Features(
@@ -87,31 +86,35 @@ class DataWriter:
         return example.SerializeToString()
 
     @staticmethod
-    def _write_batch(out_dir, batch_index, file_label_pairs, training):
+    def _write_batch(out_dir, batch_index, basic_ds):
         """
         Write a single batch of images to TFRecord format
         """
         with tf.io.TFRecordWriter(
-                f"{out_dir}/{training}/{training}_{batch_index:05d}.tfrec") as writer:
-            for file_label in file_label_pairs:
-                filename, label = file_label
-                serialized_example = DataWriter._serialize_example(filename, label)
+                f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
+            for s1, s2, d in basic_ds:
+                serialized_example = DataWriter._serialize_example(s1, s2, d)
                 writer.write(serialized_example)
+            # for file_label in file_label_pairs:
+            #     filename, label = file_label
+            #     serialized_example = DataWriter._serialize_example(filename, label)
+            #     writer.write(serialized_example)
 
     def to_tfrecords(self, imgs_per_record=1000):
         """
         Write train and/or val set to a set of TFRecords
         """
-        Parallel(n_jobs=-1)(
-            delayed(self._write_batch)(self.out_dir,
-                                       batch_index=i,
-                                       file_label_pairs=takewhile(
-                                           lambda x: x is not None,
-                                           file_label_pairs),
-                                       training=self.training)
-            for i, file_label_pairs in enumerate(
-                DataWriter._grouper(zip(self.filenames, self.labels), imgs_per_record))
-        )
+        self._write_batch(self.out_dir, batch_index=1)
+        # Parallel(n_jobs=-1)(
+        #     delayed(self._write_batch)(self.out_dir,
+        #                                batch_index=i,
+        #                                file_label_pairs=takewhile(
+        #                                    lambda x: x is not None,
+        #                                    file_label_pairs),
+        #                                training=self.training)
+        #     for i, file_label_pairs in enumerate(
+        #         DataWriter._grouper(zip(self.filenames, self.labels), imgs_per_record))
+        # )
 #
 #
 # class DataReader:
