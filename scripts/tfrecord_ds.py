@@ -6,29 +6,9 @@ from itertools import zip_longest, takewhile
 from joblib import Parallel, delayed
 
 class DataWriter:
-    def __init__(self, input_file, out_dir, training, num_classes=3):
+    def __init__(self, input_file, out_dir):
         self.input_file = input_file
         self.out_dir = out_dir
-        self.training = training
-        self.num_classes = num_classes
-
-    @staticmethod
-    def _bytes_feature(value):
-        if isinstance(value, tf.Tensor):
-            value = value.numpy()
-        elif not isinstance(value, bytes):
-            value = value.encode()
-        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
-
-    @staticmethod
-    def _int64_feature(value):
-        if not isinstance(value, list):
-            value = [value]
-        return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
-
-    @staticmethod
-    def _float_feature(value):
-        return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
     @staticmethod
     def get_basic_dataset(input_file):
@@ -45,12 +25,13 @@ class DataWriter:
             currS1, currS2 = [], []
             A = line.strip().split()
 
-            for i in A[0]: currS1.append(int(i))
-            sample1_data.append(currS1)
-
-            for j in A[1]: currS2.append(int(j))
-            sample2_data.append(currS1)
-
+            # for i in A[0]: currS1.append(int(i))
+            # sample1_data.append(currS1)
+            #
+            # for j in A[1]: currS2.append(int(j))
+            # sample2_data.append(currS1)
+            sample1_data.append(A[0])
+            sample2_data.append(A[1])
             distances_data.append(A[2])
 
         # each set of input data is its own tensor
@@ -59,40 +40,71 @@ class DataWriter:
         distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
 
         # map sample encodings to list of ints and distance values to float
-        sample1_int = sample1_ds.map(lambda x: int(x))
-        sample2_int = sample2_ds.map(lambda x: int(x))
+        # sample1_int = sample1_ds.map(lambda x: int(x))
+        # sample2_int = sample2_ds.map(lambda x: int(x))
         distances_float = distances_ds.map(lambda x: float(x))
 
         # zip 3 tensor items together into one dataset
-        full_ds = tf.data.Dataset.zip((sample1_int, sample2_int, distances_float))
+        full_ds = tf.data.Dataset.zip((sample1_ds, sample2_ds, distances_float))
         # puts 1 element into a batch
         full_ds_batch = full_ds.batch(1)
         return full_ds_batch
 
     @staticmethod
+    def _bytes_feature(value):
+        """
+
+        :param value:
+        :return: takes input value and serializes
+        """
+        if isinstance(value, tf.Tensor):
+            value = value.numpy()
+        elif not isinstance(value, bytes):
+            value = value.encode()
+        return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+    @staticmethod
+    def _int64_feature(value):
+        """
+        :param value: integer
+        :return: takes input integer value and serializes
+        """
+        if not isinstance(value, list):
+            value = [value]
+        return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
+
+    @staticmethod
+    def _float_feature(value):
+        """
+        :param value: float
+        :return: takes input float value and serializes
+        """
+        return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+
+    @staticmethod
     def _serialize_example(sample1, sample2, distance):
         """
-        given an input tensor (s1, s2, distance), serialize the input
+        given an input tensor (s1, s2, distance), serialize the entire input
         """
         example = tf.train.Example(
             features=tf.train.Features(
                 feature={
-                    'sample1': DataWriter._int64_feature(sample1),
-                    'sample2': DataWriter._int64_feature(sample2),
-                    'distance': DataWriter._float_feature(distance),
+                    'sample1': DataWriter._bytes_feature(sample1[0]),
+                    'sample2': DataWriter._bytes_feature(sample2[0]),
+                    'distance': DataWriter._float_feature(distance[0]),
                 }
             )
         )
         return example.SerializeToString()
 
     @staticmethod
-    def _write_batch(out_dir, batch_index, basic_ds):
+    def _write_batch(out_dir, batch_index, BDS):
         """
         Write a single batch of images to TFRecord format
         """
         with tf.io.TFRecordWriter(
                 f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
-            for s1, s2, d in basic_ds:
+            for s1, s2, d in BDS:
                 serialized_example = DataWriter._serialize_example(s1, s2, d)
                 writer.write(serialized_example)
             # for file_label in file_label_pairs:
@@ -100,21 +112,12 @@ class DataWriter:
             #     serialized_example = DataWriter._serialize_example(filename, label)
             #     writer.write(serialized_example)
 
-    def to_tfrecords(self, imgs_per_record=1000):
+    def to_tfrecords(self, BDS):
         """
-        Write train and/or val set to a set of TFRecords
+        Write input to a set of TFRecords
         """
-        self._write_batch(self.out_dir, batch_index=1)
-        # Parallel(n_jobs=-1)(
-        #     delayed(self._write_batch)(self.out_dir,
-        #                                batch_index=i,
-        #                                file_label_pairs=takewhile(
-        #                                    lambda x: x is not None,
-        #                                    file_label_pairs),
-        #                                training=self.training)
-        #     for i, file_label_pairs in enumerate(
-        #         DataWriter._grouper(zip(self.filenames, self.labels), imgs_per_record))
-        # )
+        self._write_batch(self.out_dir, 1, BDS)
+
 #
 #
 # class DataReader:

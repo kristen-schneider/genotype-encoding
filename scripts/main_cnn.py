@@ -10,7 +10,6 @@ import basic_ds
 import tfrecord_ds
 import model
 import utils
-import write_tfrecord
 
 import tensorflow as tf
 
@@ -32,8 +31,9 @@ def main():
     #   tf.Dataset works from memory arrays
     #   tfrecord binary format reads from file
     print('Building dataset...')
-    # tfr = tfrecord_ds.DataWriter()
-    basic_dataset = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
+    DW = tfrecord_ds.DataWriter(CNN_input_file, tf_records_dir)
+    BDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
+    tfrecord_ds.DataWriter.to_tfrecords(DW, BDS)
 
     # ds = basic_ds.build_dataset_from_file(CNN_input_file)
     print('Done.')
