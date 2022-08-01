@@ -7,6 +7,7 @@ Description: Inspired by [code](https://keras.io/examples/vision/siamese_network
 """
 
 import dataset
+import tfrecord_dataset
 import model
 import utils
 import write_tfrecord
@@ -33,8 +34,10 @@ def main():
     #   tf.Dataset works from memory arrays
     #   tfrecord binary format reads from file
     print('Building dataset...')
-    ds = dataset.build_dataset_from_file(CNN_input_file)
-    write_tfrecord.to_tfrecord(ds)
+    dataset = tfrecord_dataset.DataWriter.get_basic_dataset(CNN_input_file
+        )
+    # ds = dataset.build_dataset_from_file(CNN_input_file)
+    # write_tfrecord.to_tfrecord(ds)
     print('Done.')
     print()
 
