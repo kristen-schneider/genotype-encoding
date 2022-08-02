@@ -1,3 +1,4 @@
 src/__pycache__/
 data/CNN.input.test
+/data/tfrecords/
 scripts/__pycache__/
