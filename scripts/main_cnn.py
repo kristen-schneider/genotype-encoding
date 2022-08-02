@@ -7,17 +7,23 @@ Description: Inspired by [code](https://keras.io/examples/vision/siamese_network
 """
 
 import basic_ds
-import tfrecord_ds
 import model
+import sys
+import tfrecord_ds
 import utils
 
 import tensorflow as tf
 
-CNN_input_file = '../data/fake_input.txt'
-sampleIDs_file = '../data/ALL.chr14.samples'
-sampleEncoding_file = '../data/ALL.chr14.encoded'
-pairwiseIBD_file = '../data/ALL.chr14.genome'
-tf_records_dir = '../data/tfrecords/'
+#CNN_input_file = '../data/fake_input.txt'
+#sampleIDs_file = '../data/ALL.chr14.samples'
+#sampleEncoding_file = '../data/ALL.chr14.encoded'
+#pairwiseIBD_file = '../data/ALL.chr14.genome'
+#tf_records_dir = '../data/tfrecords/'
+
+sampleIDs_file = sys.argv[1]
+sampleEncoding_file = sys.argv[2]
+pairwiseIBD_file = sys.argv[3]
+tf_records_dir = sys.argv[4]
 
 def main():
 
