@@ -49,7 +49,7 @@ def make_pairwise_dictionary(sampleIDs_list):
 
 def fill_dictionary(empty_dictionary, sampleIDs_list, encodings_list, out_file):
     o = open(out_file, 'w')
-
+    o.write('sample1ID\tsample2ID\tIBD1_sites\tIBD1_fraction\n')
     print('computing IBD...')
     for k in empty_dictionary.keys():
         sample1_ID_index = sampleIDs_list.index(k[0])
@@ -62,8 +62,10 @@ def fill_dictionary(empty_dictionary, sampleIDs_list, encodings_list, out_file):
 
         empty_dictionary[k] = IBD1
 
+        fractionIBD1 = IBD1 / len(sample1_encoding)
+
         # write data
-        line = k[0] + '\t' + k[1] + '\t' + str(IBD1) + '\n'
+        line = k[0] + '\t' + k[1] + '\t' + str(IBD1) + '\t' + str(fractionIBD1) + '\n'
         o.write(line)
 
     o.close()
@@ -78,8 +80,9 @@ def compute_IBD1(sample1, sample2):
         return -1
 
     for i in range(len(sample1)):
-        if sample1[i] == sample2[i]:
-            shared_nonREF_genotypes += 1
+        if (sample1[i] != 0) and (sample2[i] != 0):
+            if sample1[i] == sample2[i]:
+                shared_nonREF_genotypes += 1
 
     return shared_nonREF_genotypes
 
