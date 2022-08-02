@@ -2,7 +2,8 @@ import basic_ds
 
 import tensorflow as tf
 from itertools import zip_longest, takewhile
-import numpy as np
+from joblib import Parallel, delayed
+
 import functools
 
 class DataWriter:
@@ -13,7 +14,7 @@ class DataWriter:
         self.out_dir = out_dir
 
     @staticmethod
-    def sample_encoding_dict(sample_ID_file, sample_encoding_file):
+    def _sample_encoding_dict(sample_ID_file, sample_encoding_file):
         """
         Creates a dictionary of sampleID: sample_encoding from two files
 
@@ -29,15 +30,18 @@ class DataWriter:
         # opens encoding file and
         f_encodings = open(sample_encoding_file, 'r')
         sample_i = 0
+        header = None
         for line in f_encodings:
-            sample_encoding = line.strip()
-            ID_encoding_dict[ID_list[sample_i]] = sample_encoding
-            sample_i += 1
+            if header == None: header = line
+            else:
+                sample_encoding = line.strip()
+                ID_encoding_dict[ID_list[sample_i]] = sample_encoding
+                sample_i += 1
         f_encodings.close()
         return ID_encoding_dict
 
     @staticmethod
-    def pair_IBD_tuplee(pairwise_IBD_file):
+    def _pair_IBD_tuplee(pairwise_IBD_file):
         """
         Creates a list of tuples from IBD file
 
@@ -47,14 +51,16 @@ class DataWriter:
 
         # create tuple of all sample1, sample2, distance
         f_IBDs = open(pairwise_IBD_file, 'r')
+        header = None
         for line in f_IBDs:
-            A = line.strip().split()
-            sample1_ID = A[1]
-            sample1_ID = A[3]
-            distance = A[11]
-            tuple_line = tuple(line.strip().split())
-            pair_IBD_tuple.append(tuple_line)
-        # pair_IBD_tuple.append(tuple(line.strip().split()) for line in f_IBDs)
+            if header == None: header = line
+            else:
+                A = line.strip().split()
+                sample1_ID = A[1]
+                sample2_ID = A[3]
+                distance = float(A[11])
+                tuple_line = tuple([sample1_ID, sample2_ID, distance])
+                pair_IBD_tuple.append(tuple_line)
         f_IBDs.close()
 
         return pair_IBD_tuple
@@ -117,15 +123,16 @@ class DataWriter:
         return example.SerializeToString()
 
     @staticmethod
-    def _write_batch(out_dir, batch_index, basicDS):
+    def _write_batch(out_dir, batch_index):
         """
         Write a single batch of images to TFRecord format
         """
-        with tf.io.TFRecordWriter(
-                f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
-            for s1, s2, d in basicDS:
-                serialized_example = DataWriter._serialize_example(s1, s2, d)
-                writer.write(serialized_example)
+        x = ''
+        # with tf.io.TFRecordWriter(
+        #         f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
+        #     for s1, s2, d in basicDS:
+        #         serialized_example = DataWriter._serialize_example(s1, s2, d)
+        #         writer.write(serialized_example)
 
     def to_tfrecords(self):
         """
@@ -136,12 +143,22 @@ class DataWriter:
             writing encoding + distance to tf record.
 
         """
-        ID_encoding_dict = self.sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
-        pair_IBD_tuple = self.pair_IBD_tuplee(self.pairwise_IBD_file)
+        BATCH_SIZE = 100
+        ID_encoding_dict = self._sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
+        pair_IBD_tuple = self._pair_IBD_tuplee(self.pairwise_IBD_file)
 
-        num_records = 100
-        for i in range(num_records):
-            self._write_batch(self.out_dir, 1)
+        # for i, pairwise_IBD in enumerate(DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE)):
+        #     x = ''
+        Parallel(n_jobs=-1)(
+            delayed(self._write_batch)(self.out_dir,
+                                       batch_index=i)
+            for i, pairwise_IBD in enumerate(
+                DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE))
+        )
+
+        # num_records = 100
+        # for i in range(num_records):
+        #     self._write_batch(self.out_dir, 1)
 
 
 
