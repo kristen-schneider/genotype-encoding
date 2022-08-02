@@ -1,3 +1,5 @@
+import tensorflow as tf
+
 def CNN_input_dimensions(tf_record):
     """
     find dimensions of incoming data
@@ -23,4 +25,3 @@ def CNN_input_dimensions(tf_record):
         num_lines += 1
     f.close()
     return num_variants, num_lines
-
