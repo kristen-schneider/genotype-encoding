@@ -46,14 +46,14 @@ class DataWriter:
         # zip 3 tensor items together into one dataset
         full_ds = tf.data.Dataset.zip((sample1_ds, sample2_ds, distances_float))
         # puts 1 element into a batch
-        full_ds_batch = full_ds.batch(1)
-        return full_ds_batch
+        # full_ds_batch = full_ds.batch(2)
+        return full_ds
 
     @staticmethod
     def _bytes_feature(value):
         """
 
-        :param value:
+        :param value: bytes
         :return: takes input value and serializes
         """
         if isinstance(value, tf.Tensor):
@@ -88,34 +88,30 @@ class DataWriter:
         example = tf.train.Example(
             features=tf.train.Features(
                 feature={
-                    'sample1': DataWriter._bytes_feature(sample1[0]),
-                    'sample2': DataWriter._bytes_feature(sample2[0]),
-                    'distance': DataWriter._float_feature(distance[0]),
+                    'sample1': DataWriter._bytes_feature(sample1),
+                    'sample2': DataWriter._bytes_feature(sample2),
+                    'distance': DataWriter._float_feature(distance),
                 }
             )
         )
         return example.SerializeToString()
 
     @staticmethod
-    def _write_batch(out_dir, batch_index, BDS):
+    def _write_batch(out_dir, batch_index, basicDS):
         """
         Write a single batch of images to TFRecord format
         """
         with tf.io.TFRecordWriter(
                 f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
-            for s1, s2, d in BDS:
+            for s1, s2, d in basicDS:
                 serialized_example = DataWriter._serialize_example(s1, s2, d)
                 writer.write(serialized_example)
-            # for file_label in file_label_pairs:
-            #     filename, label = file_label
-            #     serialized_example = DataWriter._serialize_example(filename, label)
-            #     writer.write(serialized_example)
 
-    def to_tfrecords(self, BDS):
+    def to_tfrecords(self, basicDS):
         """
         Write input to a set of TFRecords
         """
-        self._write_batch(self.out_dir, 1, BDS)
+        self._write_batch(self.out_dir, 1, basicDS)
 
 
 
