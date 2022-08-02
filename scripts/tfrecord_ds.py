@@ -142,7 +142,7 @@ class DataWriter:
             writing encoding + distance to tf record.
 
         """
-        BATCH_SIZE = 5000
+        BATCH_SIZE = 1000
         ID_encoding_dict = self._sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
         ALL_pairIBD_tuples = self._pair_IBD_tuple(self.pairwise_IBD_file)
 
