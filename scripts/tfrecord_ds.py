@@ -30,18 +30,15 @@ class DataWriter:
         # opens encoding file and
         f_encodings = open(sample_encoding_file, 'r')
         sample_i = 0
-        header = None
         for line in f_encodings:
-            if header == None: header = line
-            else:
-                sample_encoding = line.strip()
-                ID_encoding_dict[ID_list[sample_i]] = sample_encoding
-                sample_i += 1
+            sample_encoding = line.strip()
+            ID_encoding_dict[ID_list[sample_i]] = sample_encoding
+            sample_i += 1
         f_encodings.close()
         return ID_encoding_dict
 
     @staticmethod
-    def _pair_IBD_tuplee(pairwise_IBD_file):
+    def _pair_IBD_tuple(pairwise_IBD_file):
         """
         Creates a list of tuples from IBD file
 
@@ -147,7 +144,7 @@ class DataWriter:
         """
         BATCH_SIZE = 1000
         ID_encoding_dict = self._sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
-        ALL_pairIBD_tuples = self._pair_IBD_tuplee(self.pairwise_IBD_file)
+        ALL_pairIBD_tuples = self._pair_IBD_tuple(self.pairwise_IBD_file)
 
         # for i, pairwise_IBD in enumerate(DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE)):
         #     x = ''
