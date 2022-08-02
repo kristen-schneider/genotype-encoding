@@ -1,53 +1,69 @@
 import basic_ds
 
 import tensorflow as tf
+from itertools import zip_longest, takewhile
 import numpy as np
 import functools
 
 class DataWriter:
-    def __init__(self, input_file, out_dir):
-        self.input_file = input_file
+    def __init__(self, sample_ID_file, sample_encoding_file, pairwise_IBD_file, out_dir):
+        self.sample_ID_file = sample_ID_file
+        self.sample_encoding_file = sample_encoding_file
+        self.pairwise_IBD_file = pairwise_IBD_file
         self.out_dir = out_dir
 
+    # @staticmethod
+    # def get_basic_dataset(input_file):
+    #     """
+    #     Builds a tensorflow dataset object from file with 3 columns:
+    #     sample1, sample2, IBD_distance
+    #     :param CNN_input_file:
+    #     :return: tensorflow dataset object for input to cnn model
+    #     """
+    #     f = open(input_file, 'r')
+    #     header = f.readline()
+    #     sample1_data, sample2_data, distances_data = [], [], []
+    #     for line in f:
+    #         currS1, currS2 = [], []
+    #         A = line.strip().split()
+    #
+    #         # for i in A[0]: currS1.append(int(i))
+    #         # sample1_data.append(currS1)
+    #         #
+    #         # for j in A[1]: currS2.append(int(j))
+    #         # sample2_data.append(currS1)
+    #         sample1_data.append(A[0])
+    #         sample2_data.append(A[1])
+    #         distances_data.append(A[2])
+    #
+    #     # each set of input data is its own tensor
+    #     sample1_ds = tf.data.Dataset.from_tensor_slices(sample1_data)
+    #     sample2_ds = tf.data.Dataset.from_tensor_slices(sample2_data)
+    #     distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
+    #
+    #     # map sample encodings to list of ints and distance values to float
+    #     # sample1_int = sample1_ds.map(lambda x: int(x))
+    #     # sample2_int = sample2_ds.map(lambda x: int(x))
+    #     distances_float = distances_ds.map(lambda x: float(x))
+    #
+    #     # zip 3 tensor items together into one dataset
+    #     full_ds = tf.data.Dataset.zip((sample1_ds, sample2_ds, distances_float))
+    #     # puts (__) element into a batch
+    #     # full_ds_batch = full_ds.batch(2)
+    #     return full_ds
+    def _sample_encoding_dict(self):
+        f_IDs = open(self.sample_ID_file, 'r')
+        f_encodings = open(self.)
+
     @staticmethod
-    def get_basic_dataset(input_file):
+    def _grouper(iterable, n, fillvalue=None):
         """
-        Builds a tensorflow dataset object from file with 3 columns:
-        sample1, sample2, IBD_distance
-        :param CNN_input_file:
-        :return: tensorflow dataset object for input to cnn model
+        Collect data into fixed-length chunks or blocks,
+        Taken from python itertools docs
         """
-        f = open(input_file, 'r')
-        header = f.readline()
-        sample1_data, sample2_data, distances_data = [], [], []
-        for line in f:
-            currS1, currS2 = [], []
-            A = line.strip().split()
-
-            # for i in A[0]: currS1.append(int(i))
-            # sample1_data.append(currS1)
-            #
-            # for j in A[1]: currS2.append(int(j))
-            # sample2_data.append(currS1)
-            sample1_data.append(A[0])
-            sample2_data.append(A[1])
-            distances_data.append(A[2])
-
-        # each set of input data is its own tensor
-        sample1_ds = tf.data.Dataset.from_tensor_slices(sample1_data)
-        sample2_ds = tf.data.Dataset.from_tensor_slices(sample2_data)
-        distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
-
-        # map sample encodings to list of ints and distance values to float
-        # sample1_int = sample1_ds.map(lambda x: int(x))
-        # sample2_int = sample2_ds.map(lambda x: int(x))
-        distances_float = distances_ds.map(lambda x: float(x))
-
-        # zip 3 tensor items together into one dataset
-        full_ds = tf.data.Dataset.zip((sample1_ds, sample2_ds, distances_float))
-        # puts 1 element into a batch
-        # full_ds_batch = full_ds.batch(2)
-        return full_ds
+        # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
+        args = [iter(iterable)] * n
+        return zip_longest(fillvalue=fillvalue, *args)
 
     @staticmethod
     def _bytes_feature(value):
@@ -107,11 +123,14 @@ class DataWriter:
                 serialized_example = DataWriter._serialize_example(s1, s2, d)
                 writer.write(serialized_example)
 
-    def to_tfrecords(self, basicDS):
+    def to_tfrecords(self):
         """
-        Write input to a set of TFRecords
+        1. Read data into memory
+        2.
         """
-        self._write_batch(self.out_dir, 1, basicDS)
+        num_records = 100
+        for i in range(num_records):
+        self._write_batch(self.out_dir, 1)
 
 
 

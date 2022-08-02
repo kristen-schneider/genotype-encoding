@@ -34,7 +34,7 @@ def main():
     # Initialize DataWriter
     DW = tfrecord_ds.DataWriter(CNN_input_file, tf_records_dir)
     # Get basic dataset for whole file (string, string, float)
-    basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
+    # basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
     # Serialize dataset and write to tfrecord
     tfrecord_ds.DataWriter.to_tfrecords(DW, basicDS)
 
