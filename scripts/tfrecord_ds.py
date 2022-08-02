@@ -51,9 +51,29 @@ class DataWriter:
     #     # puts (__) element into a batch
     #     # full_ds_batch = full_ds.batch(2)
     #     return full_ds
-    def _sample_encoding_dict(self):
-        f_IDs = open(self.sample_ID_file, 'r')
-        f_encodings = open(self.)
+    @staticmethod
+    def sample_encoding_dict(sample_ID_file, sample_encoding_file):
+        """
+        Creates a dictionary of sampleID: sample_encoding from two files
+
+        :return: dictionary with key as sampleID and value as trivial encoding
+        """
+        ID_encoding_dict = dict()
+
+        # create list of all sample IDs in order
+        f_IDs = open(sample_ID_file, 'r')
+        ID_list = [line.strip() for line in f_IDs]
+        f_IDs.close()
+
+        # opens encoding file and
+        f_encodings = open(sample_encoding_file, 'r')
+        sample_i = 0
+        for line in f_encodings:
+            sample_encoding = line.strip()
+            ID_encoding_dict[ID_list[sample_i]] = sample_encoding
+            sample_i += 1
+        f_encodings.close()
+        return ID_encoding_dict
 
     @staticmethod
     def _grouper(iterable, n, fillvalue=None):
@@ -125,12 +145,14 @@ class DataWriter:
 
     def to_tfrecords(self):
         """
-        1. Read data into memory
+        1. Make ID_encoding dictionary
         2.
         """
+        ID_encoding_dict = self.sample_encoding_dict(self.sample_ID_file, self.sample_ID_file)
+
         num_records = 100
         for i in range(num_records):
-        self._write_batch(self.out_dir, 1)
+            self._write_batch(self.out_dir, 1)
 
 
 

@@ -14,6 +14,9 @@ import utils
 import tensorflow as tf
 
 CNN_input_file = '../data/fake_input.txt'
+sampleIDs_file = '../data/ALL.chr14.samples'
+sampleEncoding_file = '../data/ALL.chr14.encoded'
+pairwiseIBD_file = '../data/ALL.chr14.genome'
 tf_records_dir = '../data/tfrecords/'
 
 def main():
@@ -32,11 +35,12 @@ def main():
     #   tfrecord binary format reads from file
     print('Building dataset...')
     # Initialize DataWriter
-    DW = tfrecord_ds.DataWriter(CNN_input_file, tf_records_dir)
+    DW = tfrecord_ds.DataWriter(sampleIDs_file, sampleEncoding_file, pairwiseIBD_file, tf_records_dir)
+    ID_encoding_dict = tfrecord_ds.DataWriter.sample_encoding_dict(DW)
     # Get basic dataset for whole file (string, string, float)
     # basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
     # Serialize dataset and write to tfrecord
-    tfrecord_ds.DataWriter.to_tfrecords(DW, basicDS)
+    # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
 
     # ds = basic_ds.build_dataset_from_file(CNN_input_file)
     print('Done.')
