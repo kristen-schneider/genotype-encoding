@@ -169,11 +169,6 @@ class DataWriter:
         #         DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE))
         # )
 
-        # num_records = 100
-        # for i in range(num_records):
-        #     self._write_batch(self.out_dir, 1)
-
-
 
 # class DataReader:
 #     def __init__(self,
