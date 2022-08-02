@@ -119,61 +119,61 @@ class DataWriter:
 
 
 
-class DataReader:
-    def __init__(self,
-                 data_list,  # list of original images in the dataset
-                 tfrec_list,  # list of tfrecords in the dataset (s3 or local)
-                 num_processes,
-                 batch_size):
-        self.data_list = data_list
-        self.tfrec_list = tfrec_list
-        self.num_processes = num_processes
-        self.batch_size = batch_size
-
-    @staticmethod
-    def _parse_serialized_example(serialized_example):
-        """
-        Given a serialized example with the below format, extract/deserialize
-        the image and (one-hot) label
-        """
-        features = {
-            'filename': tf.io.FixedLenFeature((), tf.string),
-            'image': tf.io.FixedLenFeature((), tf.string),
-            'label': tf.io.FixedLenFeature((), tf.int64)
-        }
-        example = tf.io.parse_single_example(serialized_example, features)
-
-        # read image and perform transormations
-        image = DataReader._parse_image(example['image'])
-        image = tf.image.per_image_standardization(image)
-
-        label = example['label']
-        return image, tf.one_hot(label, depth=3, dtype=tf.int64)
-
-    def get_dataset(self):
-        n_images = len(open(self.data_list).readlines())
-
-        # we don't need examples to be loaded in order (better speed)
-        options = tf.data.Options()
-        options.experimental_deterministic = False
-
-        with open(self.tfrec_list) as f:
-            files = [filename.rstrip() for filename in f]
-            dataset = tf.data.Dataset.from_tensor_slices(files) \
-                .shuffle(len(files)) \
-                .with_options(options)
-
-        dataset = tf.dataset.interleave(
-            tf.data.TFRecordDataset,
-            cycle_length=self.num_processes,
-            num_parallel_calls=self.num_processes) \
- \
-                dataset = tf.dataset.map(
-                    functools.partial(DataReader._parse_serialized_example),
-                    num_parallel_calls=self.num_processes) \
-                    .repeat() \
-                    .shuffle(buffer_size=1000) \
-                    .batch(self.batch_size, drop_remainder=False) \
-                    .prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
-
-        return dataset, n_images
+# class DataReader:
+#     def __init__(self,
+#                  data_list,  # list of original images in the dataset
+#                  tfrec_list,  # list of tfrecords in the dataset (s3 or local)
+#                  num_processes,
+#                  batch_size):
+#         self.data_list = data_list
+#         self.tfrec_list = tfrec_list
+#         self.num_processes = num_processes
+#         self.batch_size = batch_size
+#
+#     @staticmethod
+#     def _parse_serialized_example(serialized_example):
+#         """
+#         Given a serialized example with the below format, extract/deserialize
+#         the image and (one-hot) label
+#         """
+#         features = {
+#             'filename': tf.io.FixedLenFeature((), tf.string),
+#             'image': tf.io.FixedLenFeature((), tf.string),
+#             'label': tf.io.FixedLenFeature((), tf.int64)
+#         }
+#         example = tf.io.parse_single_example(serialized_example, features)
+#
+#         # read image and perform transormations
+#         image = DataReader._parse_image(example['image'])
+#         image = tf.image.per_image_standardization(image)
+#
+#         label = example['label']
+#         return image, tf.one_hot(label, depth=3, dtype=tf.int64)
+#
+#     def get_dataset(self):
+#         n_images = len(open(self.data_list).readlines())
+#
+#         # we don't need examples to be loaded in order (better speed)
+#         options = tf.data.Options()
+#         options.experimental_deterministic = False
+#
+#         with open(self.tfrec_list) as f:
+#             files = [filename.rstrip() for filename in f]
+#             dataset = tf.data.Dataset.from_tensor_slices(files) \
+#                 .shuffle(len(files)) \
+#                 .with_options(options)
+#
+#         dataset = tf.dataset.interleave(
+#             tf.data.TFRecordDataset,
+#             cycle_length=self.num_processes,
+#             num_parallel_calls=self.num_processes) \
+#  \
+#                 dataset = tf.dataset.map(
+#                     functools.partial(DataReader._parse_serialized_example),
+#                     num_parallel_calls=self.num_processes) \
+#                     .repeat() \
+#                     .shuffle(buffer_size=1000) \
+#                     .batch(self.batch_size, drop_remainder=False) \
+#                     .prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+#
+#         return dataset, n_images

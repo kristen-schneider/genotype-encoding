@@ -31,9 +31,12 @@ def main():
     #   tf.Dataset works from memory arrays
     #   tfrecord binary format reads from file
     print('Building dataset...')
+    # Initialize DataWriter
     DW = tfrecord_ds.DataWriter(CNN_input_file, tf_records_dir)
-    BDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
-    tfrecord_ds.DataWriter.to_tfrecords(DW, BDS)
+    # Get basic dataset for whole file (string, string, float)
+    basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
+    # Serialize dataset and write to tfrecord
+    tfrecord_ds.DataWriter.to_tfrecords(DW, basicDS)
 
     # ds = basic_ds.build_dataset_from_file(CNN_input_file)
     print('Done.')
