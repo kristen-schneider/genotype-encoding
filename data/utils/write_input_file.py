@@ -1,6 +1,7 @@
-encoded_file = '../ALL.chr14.encoded'
-IBD_file = '../ALL.chr14.genome'
-sample_names_file = '../ALL.chr14.samples'
+data_dir = '/home/sdp/precision-medicine/data/'
+encoded_file = data_dir + 'encoded/new.encoded.txt'
+IBD_file = data_dir + 'IBD/ALL.chr14.genome'
+sample_names_file = data_dir + 'ALL.chr14.samples'
 cnn_file = '../CNN.input.test'
 
 
