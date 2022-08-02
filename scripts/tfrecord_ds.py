@@ -146,28 +146,26 @@ class DataWriter:
         ID_encoding_dict = self._sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
         ALL_pairIBD_tuples = self._pair_IBD_tuple(self.pairwise_IBD_file)
 
-        # for i, pairwise_IBD in enumerate(DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE)):
-        #     x = ''
-        for i, pairwise_IBD_batch in enumerate(
-                DataWriter._grouper(ALL_pairIBD_tuples, BATCH_SIZE)):
-            self._write_batch(self.out_dir,
-                              batch_index=i,
-                              pairwiseIBD_batch=takewhile(
-                                  lambda x: x is not None,
-                                  pairwise_IBD_batch),
-                              sample_encodings=ID_encoding_dict)
+        # for i, pairwiseIBD_batch in enumerate(
+        #         DataWriter._grouper(ALL_pairIBD_tuples, BATCH_SIZE)):
+        #     self._write_batch(self.out_dir,
+        #                       batch_index=i,
+        #                       pairwiseIBD_batch=takewhile(
+        #                           lambda x: x is not None,
+        #                           pairwiseIBD_batch),
+        #                       sample_encodings=ID_encoding_dict)
 
 
-        # Parallel(n_jobs=-1)(
-        #     delayed(self._write_batch)(self.out_dir,
-        #                                batch_index=i,
-        #                                pairwise_IBD=takewhile(
-        #                                    lambda x: x is not None,
-        #                                    pairwise_IBD),
-        #                                sample_encodings=ID_encoding_dict)
-        #     for i, pairwise_IBD in enumerate(
-        #         DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE))
-        # )
+        Parallel(n_jobs=-1)(
+            delayed(self._write_batch)(self.out_dir,
+                                       batch_index=i,
+                                       pairwiseIBD_batch=takewhile(
+                                           lambda x: x is not None,
+                                           pairwiseIBD_batch),
+                                       sample_encodings=ID_encoding_dict)
+            for i, pairwise_IBD in enumerate(
+                DataWriter._grouper(ALL_pairIBD_tuples, BATCH_SIZE))
+        )
 
 
 # class DataReader:
