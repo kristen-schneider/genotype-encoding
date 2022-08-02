@@ -24,11 +24,11 @@ def main():
     # find dimensions of incoming data
     #   number of variants = size of input vector
     #   number of distances = number of pairwise distances computed
-    [num_variants, num_distances] = utils.CNN_input_dimensions(CNN_input_file)
-    print('Opened file: ', CNN_input_file)
-    print('...Number of Variants: ', num_variants)
-    print('...Number of Pairwise Distances: ', num_distances)
-    print()
+    # [num_variants, num_distances] = utils.CNN_input_dimensions(CNN_input_file)
+    # print('Opened file: ', CNN_input_file)
+    # print('...Number of Variants: ', num_variants)
+    # print('...Number of Pairwise Distances: ', num_distances)
+    # print()
     
     # dataloader
     #   tf.Dataset works from memory arrays

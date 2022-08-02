@@ -123,16 +123,18 @@ class DataWriter:
         return example.SerializeToString()
 
     @staticmethod
-    def _write_batch(out_dir, batch_index):
+    def _write_batch(out_dir, batch_index, pairwiseIBD_batch, sample_encodings):
         """
-        Write a single batch of images to TFRecord format
+
         """
-        x = ''
-        # with tf.io.TFRecordWriter(
-        #         f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
-        #     for s1, s2, d in basicDS:
-        #         serialized_example = DataWriter._serialize_example(s1, s2, d)
-        #         writer.write(serialized_example)
+        with tf.io.TFRecordWriter(
+                f"{out_dir}/_{batch_index:05d}.tfrec") as writer:
+            for pair in pairwiseIBD_batch:
+                s1_encoding = sample_encodings[pair[0]]
+                s2_encoding = sample_encodings[pair[1]]
+                distance = pair[2]
+                serialized_example = DataWriter._serialize_example(s1_encoding, s2_encoding, distance)
+                writer.write(serialized_example)
 
     def to_tfrecords(self):
         """
@@ -143,18 +145,32 @@ class DataWriter:
             writing encoding + distance to tf record.
 
         """
-        BATCH_SIZE = 100
+        BATCH_SIZE = 1000
         ID_encoding_dict = self._sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
-        pair_IBD_tuple = self._pair_IBD_tuplee(self.pairwise_IBD_file)
+        ALL_pairIBD_tuples = self._pair_IBD_tuplee(self.pairwise_IBD_file)
 
         # for i, pairwise_IBD in enumerate(DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE)):
         #     x = ''
-        Parallel(n_jobs=-1)(
-            delayed(self._write_batch)(self.out_dir,
-                                       batch_index=i)
-            for i, pairwise_IBD in enumerate(
-                DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE))
-        )
+        for i, pairwise_IBD_batch in enumerate(
+                DataWriter._grouper(ALL_pairIBD_tuples, BATCH_SIZE)):
+            self._write_batch(self.out_dir,
+                              batch_index=i,
+                              pairwiseIBD_batch=takewhile(
+                                  lambda x: x is not None,
+                                  pairwise_IBD_batch),
+                              sample_encodings=ID_encoding_dict)
+
+
+        # Parallel(n_jobs=-1)(
+        #     delayed(self._write_batch)(self.out_dir,
+        #                                batch_index=i,
+        #                                pairwise_IBD=takewhile(
+        #                                    lambda x: x is not None,
+        #                                    pairwise_IBD),
+        #                                sample_encodings=ID_encoding_dict)
+        #     for i, pairwise_IBD in enumerate(
+        #         DataWriter._grouper(pair_IBD_tuple, BATCH_SIZE))
+        # )
 
         # num_records = 100
         # for i in range(num_records):
