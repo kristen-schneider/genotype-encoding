@@ -1,19 +1,19 @@
 import sys
 
-# samples_file = sys.argv[1]
-# encoding_file = sys.argv[2]
+samples_file = sys.argv[1]
+encoding_file = sys.argv[2]
+out_file = sys.argv[3]
 
-samples_file = '../data/ALL.chr14.samples'
-encoding_file = '../data/ALL.chr14.encoded'
-out_file = '../data/ALL.chr14.IBD1'
+#samples_file = '../data/ALL.chr14.samples'
+#encoding_file = '../data/ALL.chr14.encoded'
+#out_file = '../data/ALL.chr14.IBD1'
 
 def main():
     sampleIDs_list = make_sample_IDs_list(samples_file)
     encodings_list = make_encodings_list(encoding_file)
     empty_pairwise_dict = make_pairwise_dictionary(sampleIDs_list)
 
-    distance_dictionary = fill_dictionary(empty_pairwise_dict, sampleIDs_list, encodings_list)
-    write_target_IBD1(distance_dictionary, out_file)
+    distance_dictionary = fill_dictionary(empty_pairwise_dict, sampleIDs_list, encodings_list, out_file)
 
 def make_sample_IDs_list(samples_file):
     print('making sampleID list...')
@@ -47,7 +47,9 @@ def make_pairwise_dictionary(sampleIDs_list):
             pairwise_dict[key_pair] = -1
     return pairwise_dict
 
-def fill_dictionary(empty_dictionary, sampleIDs_list, encodings_list):
+def fill_dictionary(empty_dictionary, sampleIDs_list, encodings_list, out_file):
+    o = open(out_file, 'w')
+
     print('computing IBD...')
     for k in empty_dictionary.keys():
         sample1_ID_index = sampleIDs_list.index(k[0])
@@ -60,6 +62,11 @@ def fill_dictionary(empty_dictionary, sampleIDs_list, encodings_list):
 
         empty_dictionary[k] = IBD1
 
+        # write data
+        line = k[0] + '\t' + k[1] + '\t' + str(IBD1) + '\n'
+        o.write(line)
+
+    o.close()
     return empty_dictionary
 
 
@@ -76,17 +83,17 @@ def compute_IBD1(sample1, sample2):
 
     return shared_nonREF_genotypes
 
-def write_target_IBD1(distance_dictionary, out_file):
-
-    print('writing data...')
-    o = open(out_file, 'w')
-
-    for pair in distance_dictionary.keys():
-        s1_ID = pair[0]
-        s2_ID = pair[1]
-        d = distance_dictionary[pair]
-        line = s1_ID + '\t' + s2_ID + '\t' + str(d)
-        o.write(line)
+#def write_target_IBD1(distance_dictionary, out_file):
+#
+#    print('writing data...')
+#    o = open(out_file, 'w')
+#
+#    for pair in distance_dictionary.keys():
+#        s1_ID = pair[0]
+#        s2_ID = pair[1]
+#        d = distance_dictionary[pair]
+#        line = s1_ID + '\t' + s2_ID + '\t' + str(d)
+#        o.write(line)
 
 
 
