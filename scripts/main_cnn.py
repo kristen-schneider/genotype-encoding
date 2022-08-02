@@ -36,7 +36,7 @@ def main():
     print('Building dataset...')
     # Initialize DataWriter
     DW = tfrecord_ds.DataWriter(sampleIDs_file, sampleEncoding_file, pairwiseIBD_file, tf_records_dir)
-    ID_encoding_dict = tfrecord_ds.DataWriter.sample_encoding_dict(DW)
+    DW.to_tfrecords()
     # Get basic dataset for whole file (string, string, float)
     # basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
     # Serialize dataset and write to tfrecord

@@ -12,45 +12,6 @@ class DataWriter:
         self.pairwise_IBD_file = pairwise_IBD_file
         self.out_dir = out_dir
 
-    # @staticmethod
-    # def get_basic_dataset(input_file):
-    #     """
-    #     Builds a tensorflow dataset object from file with 3 columns:
-    #     sample1, sample2, IBD_distance
-    #     :param CNN_input_file:
-    #     :return: tensorflow dataset object for input to cnn model
-    #     """
-    #     f = open(input_file, 'r')
-    #     header = f.readline()
-    #     sample1_data, sample2_data, distances_data = [], [], []
-    #     for line in f:
-    #         currS1, currS2 = [], []
-    #         A = line.strip().split()
-    #
-    #         # for i in A[0]: currS1.append(int(i))
-    #         # sample1_data.append(currS1)
-    #         #
-    #         # for j in A[1]: currS2.append(int(j))
-    #         # sample2_data.append(currS1)
-    #         sample1_data.append(A[0])
-    #         sample2_data.append(A[1])
-    #         distances_data.append(A[2])
-    #
-    #     # each set of input data is its own tensor
-    #     sample1_ds = tf.data.Dataset.from_tensor_slices(sample1_data)
-    #     sample2_ds = tf.data.Dataset.from_tensor_slices(sample2_data)
-    #     distances_ds = tf.data.Dataset.from_tensor_slices(distances_data)
-    #
-    #     # map sample encodings to list of ints and distance values to float
-    #     # sample1_int = sample1_ds.map(lambda x: int(x))
-    #     # sample2_int = sample2_ds.map(lambda x: int(x))
-    #     distances_float = distances_ds.map(lambda x: float(x))
-    #
-    #     # zip 3 tensor items together into one dataset
-    #     full_ds = tf.data.Dataset.zip((sample1_ds, sample2_ds, distances_float))
-    #     # puts (__) element into a batch
-    #     # full_ds_batch = full_ds.batch(2)
-    #     return full_ds
     @staticmethod
     def sample_encoding_dict(sample_ID_file, sample_encoding_file):
         """
@@ -74,6 +35,29 @@ class DataWriter:
             sample_i += 1
         f_encodings.close()
         return ID_encoding_dict
+
+    @staticmethod
+    def pair_IBD_tuplee(pairwise_IBD_file):
+        """
+        Creates a list of tuples from IBD file
+
+        :return: list of tuple with (sample1_ID, sample2_ID, distance)
+        """
+        pair_IBD_tuple = []
+
+        # create tuple of all sample1, sample2, distance
+        f_IBDs = open(pairwise_IBD_file, 'r')
+        for line in f_IBDs:
+            A = line.strip().split()
+            sample1_ID = A[1]
+            sample1_ID = A[3]
+            distance = A[11]
+            tuple_line = tuple(line.strip().split())
+            pair_IBD_tuple.append(tuple_line)
+        # pair_IBD_tuple.append(tuple(line.strip().split()) for line in f_IBDs)
+        f_IBDs.close()
+
+        return pair_IBD_tuple
 
     @staticmethod
     def _grouper(iterable, n, fillvalue=None):
@@ -146,9 +130,14 @@ class DataWriter:
     def to_tfrecords(self):
         """
         1. Make ID_encoding dictionary
-        2.
+        2. Make pair_IBD tuple
+        3. IN BATCHES:
+            take sampleIDs in tuple, look up their encoding
+            writing encoding + distance to tf record.
+
         """
-        ID_encoding_dict = self.sample_encoding_dict(self.sample_ID_file, self.sample_ID_file)
+        ID_encoding_dict = self.sample_encoding_dict(self.sample_ID_file, self.sample_encoding_file)
+        pair_IBD_tuple = self.pair_IBD_tuplee(self.pairwise_IBD_file)
 
         num_records = 100
         for i in range(num_records):
