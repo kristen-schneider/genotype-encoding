@@ -80,7 +80,7 @@ def compute_IBD1(sample1, sample2):
         return -1
 
     for i in range(len(sample1)):
-        if (sample1[i] != 0) and (sample2[i] != 0):
+        if (sample1[i] != '0') and (sample2[i] != '0'):
             if sample1[i] == sample2[i]:
                 shared_nonREF_genotypes += 1
 
