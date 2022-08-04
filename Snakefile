@@ -1,9 +1,13 @@
 #configfile: "config.yaml"
 
-rule segment_vcf:
+rule segment_vcf_COMPILE:
 	input:
-		"cpp/config_sample"
+		main="cpp/src/main.cpp",
+		read_config="cpp/src/read_config.cpp",
+		include="cpp/include/"
+
 	output:
-		"data/segments/test_segment"
+		bin="cpp/bin/segment"
+
 	shell:
-		"bash ./bash/segmentVCF.sh"
+		"g++ {input.main} {input.read_config} -I {input.include} -o {output.bin}"
