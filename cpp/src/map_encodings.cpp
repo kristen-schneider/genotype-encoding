@@ -4,7 +4,7 @@
 
 using namespace std;
 
-map<string,int> readEncodingFile(string encodingFile){
+map<string,int> make_encoding_map(string encodingFile){
     // a map whose key is the genotype and whose value is the encoding
     map<string, int> encodingMap;
 
