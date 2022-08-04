@@ -1,4 +1,5 @@
-src/__pycache__/
-data/CNN.input.test
+/notes/
+/src/__pycache__/
+/data/CNN.input.test
 /data/tfrecords/
-scripts/__pycache__/
+/scripts/__pycache__/
