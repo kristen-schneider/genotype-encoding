@@ -1,4 +1,4 @@
-i#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <map>
 
@@ -20,7 +20,6 @@ map<string, string> get_config_options(string config_file){
 	config_file_stream.open(config_file);
 	if (!config_file_stream.is_open()){
 		cout << "FAILED TO OPEN: " << config_file << endl;
-		return -1;
 	}
 
 	// read file
