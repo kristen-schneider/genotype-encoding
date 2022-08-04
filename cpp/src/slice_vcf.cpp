@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void get_vcf_header(string vcf_file){
+void get_vcf_header(string vcf_file, string out_file){
 	// open file and check success
         ifstream vcf_file_stream;
         vcf_file_stream.open(vcf_file);
@@ -13,13 +13,16 @@ void get_vcf_header(string vcf_file){
         }
         // read file
         else{
-                string line;
-
+		// open out file
+		ofstream out_file_stream;
+		out_file_stream.open(out_file);
+                
+		string line;
                 // read vcf file 
                 while(getline(vcf_file_stream, line)){
 			char char1 = line.at(0);
 			if( char1 == '#'){
-				cout << line << endl;
+				out_file_stream << line << endl;
 			}
                 }
         }
@@ -45,6 +48,5 @@ void slice(string vcf_file, int segment_size, string out_file){
 		while(getline(vcf_file_stream, line)){
 			line_count += 1;
 		}
-		out_file_stream << line_count;
 	}
 }
