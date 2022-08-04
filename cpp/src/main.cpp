@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
 	
 	// slice vcf into segments
 	get_vcf_header(vcf_file, out_dir + "testsegment");
-	//slice(vcf_file, segment_size, out_dir + "testsegment");	
+	slice(vcf_file, segment_size, out_dir + "testsegment");	
 
 	return 0;
 }
