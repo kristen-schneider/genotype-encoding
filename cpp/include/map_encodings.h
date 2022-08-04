@@ -9,4 +9,4 @@
 
 using namespace std;
 
-map<string,int> make_encoding_map(string encodingFile)
+map<string,int> make_encoding_map(string encodingFile);
