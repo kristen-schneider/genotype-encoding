@@ -32,11 +32,16 @@ map<string, string> get_config_options(string config_file){
 		auto start = 0U;
 		auto end = 0U;
 		while(getline(config_file_stream, line)){
+			// get key and option from file
 			end = line.find(delim, start);
 			key = line.substr(start, end);	// key
 			start = end + delim.length();	
 			option = line.substr(start);	// option
 			start = 0U;
+
+			// add key and option to map
+            		pair<string, string> p (key, option);
+            		config_options.insert(p);
 		}
 	}
 		
