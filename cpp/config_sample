@@ -1,1 +1,5 @@
 encoding_file=/data/encoding/encoding.trivial
+
+vcf_file=~/precision_medicine/data/vcf/ALL.chr14.shapeit2_integrated_snvindels_v2a_27022019.GRCh38.phased.vcf
+
+segment_size=100
