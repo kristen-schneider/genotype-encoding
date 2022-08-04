@@ -27,6 +27,7 @@ int main(int argc, char* argv[]){
 	map<string, int> encoding_map = make_encoding_map(encoding_file);
 	
 	// slice vcf into segments
+	get_vcf_header(vcf_file);
 	slice(vcf_file, segment_size, out_dir + "testsegment");	
 
 	return 0;

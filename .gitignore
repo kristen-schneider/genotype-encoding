@@ -1,6 +1,8 @@
-/notes/
 /cpp/bin/
-/src/__pycache__/
+/data/
 /data/CNN.input.test
 /data/tfrecords/
+/notes/
+.snakemake/
+/src/__pycache__/
 /scripts/__pycache__/
