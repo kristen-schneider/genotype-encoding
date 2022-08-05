@@ -5,41 +5,47 @@
 using namespace std;
 
 map<string,int> make_encoding_map(string encodingFile){
-    // a map whose key is the genotype and whose value is the encoding
-    map<string, int> encodingMap;
+	/*
+	 * read a file with genotype and its ecoding int
+	 * a map where the key is the genotype and the 
+	 * value is the encoding for that genotype
+	 */
 
-    // delimiter separates key and value
-    string delim = " ";
+	// a map whose key is the genotype and whose value is the encoding
+   	map<string, int> encodingMap;
 
-    // open file with encoding specifications
-    ifstream eFile;
+   	// delimiter separates key and value
+   	string delim = " ";
 
-    eFile.open(encodingFile);
-    if ( !eFile.is_open() ) {
-        cout << "Failed to open: " << encodingFile << endl;
-    }
+   	// open file with encoding specifications
+   	ifstream eFile;
 
-    // read file
-    if(eFile.is_open()){
-        string line;
-        string genotype;
-        int g_encoding;
+   	eFile.open(encodingFile);
+   	if ( !eFile.is_open() ) {
+   	    cout << "Failed to open: " << encodingFile << endl;
+   	}
 
-        // split by delimiter
-        auto start = 0U;
-        auto end = 0U;
-        while(getline(eFile, line)){
-            end = line.find(delim, start);
-            genotype = line.substr(start, end);
-            start = end + delim.length();
-            g_encoding = stoi(line.substr(start));
-            start = 0U;
+   	// read file
+   	if(eFile.is_open()){
+   	    string line;
+   	    string genotype;
+   	    int g_encoding;
 
-            // add genotype encoding to map
-            pair<string, int> p (genotype, g_encoding);
-            encodingMap.insert(p);
-        }
+   	    // split by delimiter
+   	    auto start = 0U;
+   	    auto end = 0U;
+   	    while(getline(eFile, line)){
+   	        end = line.find(delim, start);
+   	        genotype = line.substr(start, end);
+   	        start = end + delim.length();
+   	        g_encoding = stoi(line.substr(start));
+   	        start = 0U;
 
-    }
-    return encodingMap;
+   	        // add genotype encoding to map
+   	        pair<string, int> p (genotype, g_encoding);
+   	        encodingMap.insert(p);
+   	    }
+
+   	}
+   	return encodingMap;
 }
