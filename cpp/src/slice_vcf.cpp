@@ -8,7 +8,7 @@ void get_vcf_header(string vcf_file, string out_file){
 	/*
 	 * open VCF file and write header data to out_file
 	 */
-	
+	 
 	// open file and check success
         ifstream vcf_file_stream;
         vcf_file_stream.open(vcf_file);

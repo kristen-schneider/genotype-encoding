@@ -3,6 +3,7 @@
 #include <map>
 
 
+#include "encode_vcf.h"
 #include "map_encodings.h"
 #include "read_config.h"
 #include "slice_vcf.h"
@@ -10,11 +11,11 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-
+	
+	
+	// read config file
 	string configFile = argv[1];   // configuration file will all options
 	map<string, string> config_options;
-
-	// read config file
 	config_options = get_config_options(configFile);
 	
 	// access each option by variable name
@@ -26,9 +27,13 @@ int main(int argc, char* argv[]){
 	// make encoding map
 	map<string, int> encoding_map = make_encoding_map(encoding_file);
 	
+	// out_file_names
+	string vcf_out_file = out_dir + "chr14.segment." + config_options["segment_size"] + ".vcf";
+	string encoding_out_file = out_dir + "chr14.segment." + config_options["segment_size"] + ".encoding";
+
 	// slice vcf into segments
-	get_vcf_header(vcf_file, out_dir + "testsegment");
-	slice(vcf_file, segment_size, out_dir + "testsegment");	
+	get_vcf_header(vcf_file, vcf_out_file);
+	slice(vcf_file, segment_size, vcf_out_file);	
 
 	return 0;
 }
