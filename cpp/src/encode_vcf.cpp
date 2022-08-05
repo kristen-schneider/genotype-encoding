@@ -36,21 +36,38 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
 		//	2. Sequence names and lengths in "contig" lines
 		//	3. Sample names. 
 		bcf_hdr_t *vcf_header = bcf_hdr_read(vcf_stream);
-		int num_samples = bcf_hdr_nsamples(vcf_header);
-		cout << "NUM SAMPLES: " << num_samples << endl;
+		if (vcf_header == NULL) {
+                	throw runtime_error("Unable to read header.");
+        	}
 		
-		int *nseq;
-			
-		const char** sequence_names = bcf_hdr_seqnames(vcf_header, nseq);
-		cout << sequence_names[0] << endl;
-		cout << sequence_names[2548] << endl;
-		//cout << nseq[0]<< endl;
-		//cout << nseq[2548] << endl;
-		cout << "PRINTING" << endl;
+		// getting number of samples
+		int num_samples = get_num_samples(vcf_header);
+		cout << "NUM SAMPLES: " << num_samples << endl;
+		const char **sequence_names = get_sequence_names(vcf_header);
 
-		//for (int i = 0; i < 10; i++){
-		//	cout << sequence_names[i] << endl;
-		//}
+
 	}
 	
+}
+
+int get_num_samples(bcf_hdr_t *vcf_header){
+	/*
+	 * returns number of samples in VCF file
+	 */
+
+	int num_samples = -1;
+	num_samples = bcf_hdr_nsamples(vcf_header);
+	return num_samples;
+}
+
+const char **get_sequence_names(bcf_hdr_t *vcf_header){
+	/*
+	 * returns sequnce IDs/names in VCF file
+	 */
+	int n = 0;
+	
+	const char **sequence_names = NULL;
+	bcf_hdr_seqnames(vcf_header, &n);
+	
+	return sequence_names;
 }
