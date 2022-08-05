@@ -2,6 +2,8 @@
 #include <fstream>
 #include <map>
 
+#include "read_config.h"
+
 using namespace std;
 
 map<string, string> get_config_options(string config_file){

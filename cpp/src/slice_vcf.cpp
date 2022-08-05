@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 
+#include "slice_vcf.h"
+
 using namespace std;
 
 void get_vcf_header(string vcf_file, string out_file){

@@ -2,6 +2,8 @@
 #include <fstream>
 #include <map>
 
+#include "map_encodings.h"
+
 using namespace std;
 
 map<string,int> make_encoding_map(string encodingFile){
