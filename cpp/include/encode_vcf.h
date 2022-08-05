@@ -13,9 +13,12 @@
 #include <fstream>
 #include <map>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, string output_encoding_file);
 int get_num_samples(bcf_hdr_t *vcf_header);
 const char **get_sequence_names(bcf_hdr_t *vcf_header);
+vector<vector<int>> transpose(vector<vector<int>> &vmf);
+void write_SMF(vector<vector<int>> smf, string output_encoding_file);

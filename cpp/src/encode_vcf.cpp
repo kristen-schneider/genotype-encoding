@@ -24,10 +24,6 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
 	// convert file string to const char
 	const char *vcfFile = input_vcf_file.c_str();
 
-	// open output file to write encoding
-	ofstream output_stream;
-	output_stream.open(output_encoding_file);
-
 	// open VCF file with htslib
 	htsFile *vcf_stream = bcf_open(vcfFile, "r");
 	if (!vcf_stream){
@@ -56,8 +52,10 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
         	}
 
 		vector<vector<int>> all_genotype_encodings; // vector of vectors
-		
-		while (bcf_read(vcf_stream, vcf_header, vcf_record)){
+	
+		cout << "...reading genotypes." << endl;
+		while (bcf_read(vcf_stream, vcf_header, vcf_record) == 0){
+
 			bcf_unpack(vcf_record, BCF_UN_ALL);
 			bcf_unpack(vcf_record, BCF_UN_INFO);
 
@@ -86,18 +84,35 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
 			// reading genotypes
 			string s_gt;
 			int *gt = NULL;
-			int ngt = 0;
+			int num_alleles = 0;
 			int ngt_arr = 0;
+			vector<int> record_encoding_vector;
 
-			ngt = bcf_get_genotypes(vcf_header, vcf_record,  &gt, &ngt_arr);
-			
-
-			vector<int> record_encoding;
-		}	
-		
-
-	}
+			num_alleles = bcf_get_genotypes(vcf_header, vcf_record,  &gt, &ngt_arr);
+			int alleles_per_gt = num_alleles/num_samples;
+			for (int i = 0; i < num_samples; i++){
+				int allele1 = bcf_gt_allele(gt[i*alleles_per_gt+0]);
+				int allele2;
+				
+				// replace unknowns
+				if (allele1 == -1){ s_gt = ".|.";}
+				else{
+					allele2 = bcf_gt_allele(gt[i*alleles_per_gt+1]);
+					s_gt = to_string(allele1)+"|"+to_string(allele2);
+				}
+				record_encoding_vector.push_back(encoding_map[s_gt]);
+			}
+			all_genotype_encodings.push_back(record_encoding_vector);
+			record_encoding_vector.clear();
+		} // end of reading records
+	// transposing data
+	cout << "...transposing data..." << endl;
+	vector<vector<int>> sample_major_format_vec = transpose(all_genotype_encodings);
+	// writing smf
+	cout << "...writing sample major format encodings to file..." << endl;
+	write_SMF(sample_major_format_vec, output_encoding_file);
 	
+	}
 }
 
 int get_num_samples(bcf_hdr_t *vcf_header){
@@ -120,4 +135,47 @@ const char **get_sequence_names(bcf_hdr_t *vcf_header){
 	bcf_hdr_seqnames(vcf_header, &n);
 	
 	return sequence_names;
+}
+
+// transpose a vector of vectors of ints
+vector<vector<int>> transpose(vector<vector<int>> &vmf){
+	/*
+	 * Takes a variant major format
+	 * vector of vector of ints
+	 * and transposes it to
+	 * sample major format.
+	 */
+	cout << "Transposing VMF to SMF..." << endl;
+	// throw error if size is bad
+	if (vmf.size() == 0) {
+		cerr << "Error reading variant major format." << endl;
+	}
+
+	// transpose data
+	vector<vector<int>> smf_vec(vmf[1].size(), vector<int>());
+    	for (size_t i = 0; i < vmf.size(); i++) {
+		for (size_t j = 0; j < vmf[i].size(); j++) {
+            		smf_vec[j].push_back(vmf[i][j]);
+        	}
+    	}
+    return smf_vec;
+}
+
+void write_SMF(vector<vector<int>> smf, string output_encoding_file){
+	/*
+	 * writes sample major format
+	 * to outfile
+	 */
+	
+	// open output file to write encoding
+	ofstream output_stream;
+	output_stream.open(output_encoding_file);
+
+	for (int i = 0; i < smf.size(); i++) {
+		vector<int> sample = smf.at(i);
+		for(int j = 0; j < sample.size(); j++) {
+			output_stream << sample.at(j);
+		}
+		output_stream << endl;
+	}
 }
