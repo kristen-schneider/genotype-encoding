@@ -11,8 +11,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	
-	
+		
 	// read config file
 	string configFile = argv[1];   // configuration file will all options
 	map<string, string> config_options;
@@ -34,6 +33,10 @@ int main(int argc, char* argv[]){
 	// slice vcf into segments
 	get_vcf_header(vcf_file, vcf_out_file);
 	slice(vcf_file, segment_size, vcf_out_file);	
+
+	// encoded vcf segments 
+	write_encoded_vcf(vcf_file, encoding_map, encoding_out_file);
+
 
 	return 0;
 }

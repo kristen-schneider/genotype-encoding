@@ -31,10 +31,26 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
 		cout << "FAILED TO OPEN: " << input_vcf_file << endl;
 	}
 	else{
-	
+		// bcf_hdr_t: 3 dictionaries. https://github.com/samtools/htslib/blob/develop/htslib/vcf.h
+		//	1. IDs: "FILTER/INFO/FORMAT" lines
+		//	2. Sequence names and lengths in "contig" lines
+		//	3. Sample names. 
 		bcf_hdr_t *vcf_header = bcf_hdr_read(vcf_stream);
-		//int num_samples = bcf_hdr_nsamples(bcf_hdr_t);
-		//cout << num_samples << endl;
+		int num_samples = bcf_hdr_nsamples(vcf_header);
+		cout << "NUM SAMPLES: " << num_samples << endl;
+		
+		int *nseq;
+			
+		const char** sequence_names = bcf_hdr_seqnames(vcf_header, nseq);
+		cout << sequence_names[0] << endl;
+		cout << sequence_names[2548] << endl;
+		//cout << nseq[0]<< endl;
+		//cout << nseq[2548] << endl;
+		cout << "PRINTING" << endl;
+
+		//for (int i = 0; i < 10; i++){
+		//	cout << sequence_names[i] << endl;
+		//}
 	}
 	
 }
