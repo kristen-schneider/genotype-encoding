@@ -62,7 +62,7 @@ void slice(string vcf_file, int segment_size, string out_file){
 				line_count ++;
 			}
 		}
-		cout << "SEGMENT LENGTH: " << segment_length << endl;
+		cout << "SEGMENT LENGTH: " << segment_size << endl;
 		cout << "LINE COUNT: " <<line_count << endl;
 	}
 }
