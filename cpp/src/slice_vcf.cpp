@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void get_vcf_header(string vcf_file, string out_file){
+void write_vcf_header(string vcf_file, string out_file){
 	/*
 	 * open VCF file and write header data to out_file
 	 */
@@ -53,13 +53,19 @@ void slice(string vcf_file, int segment_size, string base_name, string out_dir){
 		int segment_count = 0;
 		int lines_in_segment = 0;
 
-		// open out file in append mode
+		// name segment out_file
 		string out_vcf_segment_name = out_dir + base_name + \
 					      ".seg." + to_string(segment_count) + \
 					      ".vcf";
-		ofstream out_file_stream;
-		out_file_stream.open(out_vcf_segment_name);//, ios_base::app);
+		// write vcf header
+		write_vcf_header(vcf_file, out_vcf_segment_name);
 		
+		// open out file in append mode
+		ofstream out_file_stream;
+		out_file_stream.open(out_vcf_segment_name, ios_base::app);
+		
+		
+
 		// read vcf file until segment length
 		while (lines_in_segment < segment_size){
 			if (vcf_file_stream.peek() != EOF){
@@ -99,7 +105,11 @@ void slice(string vcf_file, int segment_size, string base_name, string out_dir){
 				out_vcf_segment_name = out_dir + base_name + \
                                               ".seg." + to_string(segment_count) + \
                                               ".vcf";
-				out_file_stream.open(out_vcf_segment_name);//, ios_base::app);	
+				// write vcf header to new segment out_file
+				write_vcf_header(vcf_file, out_vcf_segment_name);
+				// open new segment out_file in append mode
+				out_file_stream.open(out_vcf_segment_name, ios_base::app);	
+
 			}
 		}
 		out_file_stream.close();	
