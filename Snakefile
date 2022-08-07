@@ -2,8 +2,8 @@
 
 rule all:
 	input:
-		"data/segments/chr14.segment.10.vcf",
-		"data/segments/chr14.segment.10.encoding"
+		"data/segments/ALL.chr14.seg.1.vcf"
+		#"data/segments/chr14.segment.10.encoding"
 		
 rule segment_vcf_COMPILE:
 	input:
@@ -34,8 +34,8 @@ rule segment_vcf_RUN:
 		bin="cpp/bin/segment",
 		config_file="cpp/config_sample"
 	output:
-		vcf_segment="data/segments/chr14.segment.10.vcf", 
-		encoding_segment="data/segments/chr14.segment.10.encoding"
+		vcf_segment="data/segments/ALL.chr14.seg.1.vcf"
+		#encoding_segment="data/segments/chr14.segment.10.encoding"
 	message: 
 		"Executing segment_vcf"
 	shell:
