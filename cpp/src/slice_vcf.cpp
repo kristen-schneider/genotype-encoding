@@ -34,37 +34,78 @@ void get_vcf_header(string vcf_file, string out_file){
         }
 }
 
-void slice(string vcf_file, int segment_size, string out_file){
+void slice(string vcf_file, int segment_size, string base_name, string out_dir){
 	/*
 	 * Open VCF file, ignore header,
 	 * write a segment of columns to out_file
 	 */
 		
-	// open file and check success
+	// open vcf file and check success
         ifstream vcf_file_stream;
         vcf_file_stream.open(vcf_file);
         if (!vcf_file_stream.is_open()){
                 cout << "FAILED TO OPEN: " << vcf_file << endl;
         }
-        // read file
+        // read vcf file
         else{
 		string line;
-		int line_count = 0;
+		int total_line_count = 0;
+		int segment_count = 0;
+		int lines_in_segment = 0;
 
 		// open out file in append mode
+		string out_vcf_segment_name = out_dir + base_name + \
+					      ".seg." + to_string(segment_count) + \
+					      ".vcf";
 		ofstream out_file_stream;
-		out_file_stream.open(out_file, ios_base::app);
-
-		// read vcf file until segment length up
-		while (line_count < segment_size){
-			getline (vcf_file_stream, line);
+		out_file_stream.open(out_vcf_segment_name);//, ios_base::app);
+		
+		// read vcf file until segment length
+		while (lines_in_segment < segment_size){
+			if (vcf_file_stream.peek() != EOF){
+				getline (vcf_file_stream, line);
+			}
+			else {
+				lines_in_segment = segment_size;
+				cout << "segment " << segment_count << " " << out_vcf_segment_name << endl;
+				cout << "END OF FILE" << endl;
+				//break;
+			}
+			
 			// ingore header
 			if (line.at(0) != '#'){
+				//cout << total_line_count << " " \
+					<< lines_in_segment << " " \
+					<< out_vcf_segment_name << endl;
 				out_file_stream << line << endl;
-				line_count ++;
+				// increment counters
+				lines_in_segment ++;
+				total_line_count ++;
+			}
+			// if segment length fulfilled
+			if (lines_in_segment == segment_size){
+				cout << "segment " << segment_count << " " << out_vcf_segment_name << endl;
+				// write last line and close previous file
+				// ingore header
+                        	if (line.at(0) != '#'){
+                                	out_file_stream << line << endl;
+					// reset while loop counter
+                               		lines_in_segment = 0;
+                       		}
+				out_file_stream.close();
+				
+				// open new file stream
+				segment_count++;
+				out_vcf_segment_name = out_dir + base_name + \
+                                              ".seg." + to_string(segment_count) + \
+                                              ".vcf";
+				out_file_stream.open(out_vcf_segment_name);//, ios_base::app);	
 			}
 		}
+		out_file_stream.close();	
 		cout << "SEGMENT LENGTH: " << segment_size << endl;
-		cout << "LINE COUNT: " <<line_count << endl;
+		cout << "LINE COUNT: " << total_line_count << endl;
+		cout << "NUM SEGMENTS: " << segment_count << endl;
+		int num_variants = total_line_count;
 	}
 }

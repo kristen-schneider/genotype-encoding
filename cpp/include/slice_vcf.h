@@ -10,4 +10,4 @@
 using namespace std;
 
 void get_vcf_header(string vcf_file, string out_file);
-void slice(string vcf_file, int segment_size, string out_file);
+void slice(string vcf_file, int segment_size, string base_name, string out_dir);;
