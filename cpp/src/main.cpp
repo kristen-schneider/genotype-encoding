@@ -13,6 +13,7 @@ using namespace std;
 int main(int argc, char* argv[]){
 		
 	// read config file
+	cout << "Reading Config File..." << endl;
 	string configFile = argv[1];   // configuration file will all options
 	map<string, string> config_options;
 	config_options = get_config_options(configFile);
@@ -31,11 +32,13 @@ int main(int argc, char* argv[]){
 	string encoding_out_file = out_dir + "chr14.segment." + config_options["segment_size"] + ".encoding";
 
 	// slice vcf into segments
+	cout << "Slicing VCF..." << endl;
 	get_vcf_header(vcf_file, vcf_out_file);
 	slice(vcf_file, segment_size, vcf_out_file);	
 
 	// encoded vcf segments 
-	write_encoded_vcf(vcf_file, encoding_map, encoding_out_file);
+	cout << "Encoding VCF..." << endl;
+	write_encoded_vcf(vcf_out_file, encoding_map, encoding_out_file);
 
 
 	return 0;

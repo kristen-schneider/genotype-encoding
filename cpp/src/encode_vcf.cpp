@@ -25,6 +25,7 @@ void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, str
 	const char *vcfFile = input_vcf_file.c_str();
 
 	// open VCF file with htslib
+	cout << "VCF; " << input_vcf_file << endl;
 	htsFile *vcf_stream = bcf_open(vcfFile, "r");
 	if (!vcf_stream){
 		cout << "FAILED TO OPEN: " << input_vcf_file << endl;
