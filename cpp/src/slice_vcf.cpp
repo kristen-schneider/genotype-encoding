@@ -93,11 +93,12 @@ void slice(string vcf_file, int segment_size, string base_name, string out_dir){
 				cout << "segment " << segment_count << " " << out_vcf_segment_name << endl;
 				// write last line and close previous file
 				// ingore header
-                        	if (line.at(0) != '#'){
-                                	out_file_stream << line << endl;
-					// reset while loop counter
-                               		lines_in_segment = 0;
-                       		}
+                        	//if (line.at(0) != '#'){
+                                //	out_file_stream << line << endl;
+				//	// reset while loop counter
+                               	//	lines_in_segment = 0;
+                       		//}
+				lines_in_segment = 0;
 				out_file_stream.close();
 				
 				// open new file stream
