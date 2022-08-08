@@ -50,16 +50,16 @@ def main():
     # Serialize dataset and write to tfrecord
     # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
 
-    ds = basic_ds.build_dataset_from_file(CNN_input_file)
-    print('Writing dataset to zip file...')
-    tf.data.experimental.save(
-        ds, ds_output_file, compression='GZIP'
-    )
+    # ds = basic_ds.build_dataset_from_file(CNN_input_file)
+    # print('Writing dataset to zip file...')
+    # tf.data.experimental.save(
+    #     ds, ds_output_file, compression='GZIP'
+    # )
 
     # load dataset from file
-    #ds = tf.data.experimental.load(
-    #    ds_output_file, element_spec=None, compression='GZIP', reader_func=None
-    #)
+    ds = tf.data.experimental.load(
+       ds_output_file, element_spec=None, compression='GZIP', reader_func=None
+    )
     print('Done.')
     print()
 
