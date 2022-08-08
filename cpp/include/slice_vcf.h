@@ -10,4 +10,4 @@
 using namespace std;
 
 void write_vcf_header(string vcf_file, string out_file);
-void slice(string vcf_file, int segment_size, string base_name, string out_dir);;
+int slice(string vcf_file, int segment_size, string base_name, string out_dir);;

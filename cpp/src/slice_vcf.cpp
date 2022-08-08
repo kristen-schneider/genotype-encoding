@@ -34,7 +34,7 @@ void write_vcf_header(string vcf_file, string out_file){
         }
 }
 
-void slice(string vcf_file, int segment_size, string base_name, string out_dir){
+int slice(string vcf_file, int segment_size, string base_name, string out_dir){
 	/*
 	 * Open VCF file, ignore header,
 	 * write a segment of columns to out_file
@@ -119,4 +119,5 @@ void slice(string vcf_file, int segment_size, string base_name, string out_dir){
 		cout << "NUM SEGMENTS: " << segment_count << endl;
 		int num_variants = total_line_count;
 	}
+	return segment_count;
 }
