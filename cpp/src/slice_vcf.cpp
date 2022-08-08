@@ -40,6 +40,9 @@ int slice(string vcf_file, int segment_size, string base_name, string out_dir){
 	 * write a segment of columns to out_file
 	 */
 		
+	// to return
+	int segment_count = 0;
+	
 	// open vcf file and check success
         ifstream vcf_file_stream;
         vcf_file_stream.open(vcf_file);
@@ -50,7 +53,6 @@ int slice(string vcf_file, int segment_size, string base_name, string out_dir){
         else{
 		string line;
 		int total_line_count = 0;
-		int segment_count = 0;
 		int lines_in_segment = 0;
 
 		// name segment out_file
