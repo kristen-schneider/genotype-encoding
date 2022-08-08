@@ -4,5 +4,5 @@
 /data/tfrecords/
 /notes/
 .snakemake/
-/src/__pycache__/
-/scripts/__pycache__/
+/cpp/src/__pycache__/
+/python/scripts/__pycache__/
