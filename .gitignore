@@ -3,7 +3,7 @@
 /data/CNN.input.test
 /data/tfrecords/
 /examples/
-/idea/
+/.idea/
 /notes/
 .snakemake/
 /cpp/src/__pycache__/
