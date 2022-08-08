@@ -22,13 +22,32 @@ def build_base_cnn(vector_size):
     # dense2 = tf.keras.layers.Dense(20, activation="relu", name="two")(dense1)
 
     # Outputs
-    outputs = tf.keras.layers.Dense(20)(x)
+    outputs = tf.keras.layers.Dense(80)(x)
     # outputs = tf.keras.layers.Dense(20)(x)
 
     # base CNN model
     base_cnn_model = tf.keras.Model(inputs=inputs, outputs=outputs, name="base_cnn")
 
     return base_cnn_model
+
+def build_siamese_network(vector_size):
+    """
+    Builds siamese network
+    :param vector_size: size of the sample inputs
+    :return: siamese network with two inputs (s1, s2) and one output (predicted distance)
+    """
+    base_cnn = build_base_cnn(vector_size)
+
+    sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
+    sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
+
+    predicted_distances = DistanceLayer()(
+        base_cnn(sample1_input),
+        base_cnn(sample2_input)
+    )
+    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input],
+                                     outputs=predicted_distances)
+    return siamese_network
 
 class DistanceLayer(tf.keras.layers.Layer):
     """
@@ -98,22 +117,3 @@ class SiameseModel(tf.keras.Model):
     def metrics(self):
         return [self.loss_tracker]
 
-
-def build_siamese_network(vector_size):
-    """
-    Builds siamese network
-    :param vector_size: size of the sample inputs
-    :return: siamese network with two inputs (s1, s2) and one output (predicted distance)
-    """
-    base_cnn = build_base_cnn(vector_size)
-
-    sample1_input = tf.keras.Input(name="sample1", shape=vector_size)
-    sample2_input = tf.keras.Input(name="sample2", shape=vector_size)
-
-    predicted_distances = DistanceLayer()(
-        base_cnn(sample1_input),
-        base_cnn(sample2_input)
-    )
-    siamese_network = tf.keras.Model(inputs=[sample1_input, sample2_input],
-                                     outputs=predicted_distances)
-    return siamese_network

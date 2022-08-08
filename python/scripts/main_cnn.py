@@ -55,6 +55,8 @@ def main():
     # tf.data.experimental.save(
     #     ds, ds_output_file, compression='GZIP'
     # )
+
+    # load dataset from file
     ds = tf.data.experimental.load(
         ds_output_file, element_spec=None, compression='GZIP', reader_func=None
     )
@@ -62,7 +64,10 @@ def main():
     print()
 
     print('Running...')
+    # getting size of the input encoding vectors
     vector_size = num_variants
+
+    # building model
     siamese_network = model.build_siamese_network(vector_size)
     siamese_model = model.SiameseModel(siamese_network)
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
