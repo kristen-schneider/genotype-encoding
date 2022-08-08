@@ -29,7 +29,7 @@ def ID_encoding_dict(ID_list, sample_encodings_file):
    
     for line in encodings_f:
         encoding = line.strip()
-        ID_encoding_dictionary[ID_list[ID_i]] = line
+        ID_encoding_dictionary[ID_list[ID_i]] = encoding
         ID_i += 1
     
     encodings_f.close()
@@ -54,10 +54,8 @@ def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, CNN_input_file):
             ID1_encoding = ID_encoding_dictionary[ID1]
             ID2_encoding = ID_encoding_dictionary[ID2]
         
-            pairwise_entry = ID1_encoding + '\t' + \
-                            ID2_encoding + '\t' + \
-                            str(distance) + '\n'
 
+            pairwise_entry = ID1_encoding + '\t' + ID2_encoding + '\t' + str(distance) + '\n'
             CNN_f.write(pairwise_entry)
 
     plink_f.close()
