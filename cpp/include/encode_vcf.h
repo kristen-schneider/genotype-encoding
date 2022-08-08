@@ -17,8 +17,7 @@
 
 using namespace std;
 
-
-vector<vector<string>> read_VCF_data(string input_vcf_file);
+void write_all_segemnts(int num_segments, map<string, int> encoding_map, string output_dir, string output_base_name);
 void write_encoded_vcf(string input_vcf_file, map<string, int> encoding_map, string output_encoding_file);
 int get_num_samples(bcf_hdr_t *vcf_header);
 const char **get_sequence_names(bcf_hdr_t *vcf_header);
