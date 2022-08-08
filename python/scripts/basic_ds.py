@@ -14,7 +14,7 @@ def build_dataset_from_file(CNN_input_file):
     distances_data = []
     c = 0
     for line in f:
-        print(c)
+        # print(c)
         currS1 = []
         currS2 = []
         A = line.strip().split()
@@ -26,7 +26,7 @@ def build_dataset_from_file(CNN_input_file):
         sample2_data.append(currS1)
 
         distances_data.append(A[2])
-        c+=1
+        c += 1
 
     # each set of input data is its own tensor
     sample1_ds = tf.data.Dataset.from_tensor_slices(sample1_data)

@@ -1,3 +1,4 @@
+import math
 import random
 import sys
 
@@ -49,6 +50,18 @@ def compute_distance(sample1, sample2):
             continue
     distance = similarity/num_variants
     return distance
+
+def compute_eucliddea_distance(sample1, sample2):
+    num_variants = len(sample1)
+    ED = 0
+    sum_d = 0
+    for i in range(len(sample1)):
+        d = sample1[i] - sample2[i]
+        d_sqrd = math.pow(d, 2)
+        sum_d += d_sqrd
+
+    ED = math.sqrt(sum_d)
+    return ED
 
 if __name__ == '__main__':
     main()
