@@ -1,4 +1,6 @@
 import tensorflow as tf
+import math
+import numpy as np
 
 def build_base_cnn(vector_size):
     """
@@ -58,7 +60,8 @@ class DistanceLayer(tf.keras.layers.Layer):
         super().__init__(**kwargs)
 
     def call(self, sample1, sample2):
-        distance = tf.reduce_sum(tf.norm(sample1 - sample2, ord='euclidean'))
+        distance = tf.reduce_sum(tf.square(sample1 - sample2), -1)
+        # distance = tf.norm(sample1 - sample2, ord='euclidean')
         return distance
 
 class SiameseModel(tf.keras.Model):
@@ -72,11 +75,10 @@ class SiameseModel(tf.keras.Model):
 
     def call(self, data):
         sample1, sample2 = data[:2]
-        sample1 = tf.expand_dims(input=sample1, axis=-1)
-        sample2 = tf.expand_dims(input=sample2, axis=-1)
+        # sample1 = tf.expand_dims(input=sample1, axis=-1)
+        # sample2 = tf.expand_dims(input=sample2, axis=-1)
 
-        return self.siamese_network(tf.expand_dims(input=sample1, axis=-1),
-                                    tf.expand_dims(input=sample2, axis=-1))
+        return self.siamese_network(sample1, sample2)
 
     def train_step(self, data):
         """
@@ -111,6 +113,9 @@ class SiameseModel(tf.keras.Model):
         loss = tf.keras.metrics.mean_squared_error(
             predicted_distance, target_distances
         )
+        # if (tf.reduce_any(tf.math.is_nan(loss))):
+        #     print(sample_data, target_distances, predicted_distance)
+
         return loss
 
     @property

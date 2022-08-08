@@ -50,29 +50,32 @@ def main():
     # Serialize dataset and write to tfrecord
     # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
 
-    ds = basic_ds.build_dataset_from_file(CNN_input_file)
-    print('Writing dataset to zip file...')
-    tf.data.experimental.save(
-        ds, ds_output_file, compression='GZIP'
-    )
+    # ds = basic_ds.build_dataset_from_file(CNN_input_file)
+    # print('Writing dataset to zip file...')
+    # tf.data.experimental.save(
+    #     ds, ds_output_file, compression='GZIP'
+    # )
 
-    #print('Loading dataset from zip file...')
     # load dataset from file
-    #ds = tf.data.experimental.load(
-    #    ds_output_file, element_spec=None, compression='GZIP', reader_func=None
-    #)
+    ds = tf.data.experimental.load(
+        ds_output_file, element_spec=None, compression='GZIP', reader_func=None
+    )
     print('Done.')
     print()
 
-    #print('Running...')
+    print('Running...')
     # getting size of the input encoding vectors
-    #vector_size = num_variants
+    vector_size = num_variants
+
+    # building network
+    siamese_network = model.build_siamese_network(vector_size)
 
     # building model
-    #siamese_network = model.build_siamese_network(vector_size)
-    #siamese_model = model.SiameseModel(siamese_network)
-    #siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
-    #siamese_model.fit(ds, epochs=10)
+    siamese_model = model.SiameseModel(siamese_network)
+    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
+
+    # training model
+    siamese_model.fit(ds, epochs=10)
 
 if __name__ == '__main__':
     main()

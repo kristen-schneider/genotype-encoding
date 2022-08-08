@@ -26,7 +26,7 @@ def main():
                 continue
             else:
                 sample2 = all_samples[sample_j]
-                distance = compute_distance(sample1, sample2)
+                distance = compute_euclidean_distance(sample1, sample2)
                 line = sample1 + '\t' + sample2 + '\t' + str(distance) + '\n'
                 f.write(line) 
 
@@ -51,12 +51,12 @@ def compute_distance(sample1, sample2):
     distance = similarity/num_variants
     return distance
 
-def compute_eucliddea_distance(sample1, sample2):
+def compute_euclidean_distance(sample1, sample2):
     num_variants = len(sample1)
     ED = 0
     sum_d = 0
     for i in range(len(sample1)):
-        d = sample1[i] - sample2[i]
+        d = int(sample1[i]) - int(sample2[i])
         d_sqrd = math.pow(d, 2)
         sum_d += d_sqrd
 
