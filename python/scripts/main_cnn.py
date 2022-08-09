@@ -26,7 +26,10 @@ import tensorflow as tf
 sample_IDs_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
 pairwise_distances_file = sys.argv[3]
-ds_out_dir = sys.argv[4]
+
+
+for i in sys.argv: print(i)
+#ds_out_dir = sys.argv[4]
 #tf_records_dir = sys.argv[4]
 
 def main():
