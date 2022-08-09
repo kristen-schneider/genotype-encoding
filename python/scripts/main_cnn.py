@@ -63,6 +63,16 @@ def main():
     print('Done.')
     print()
 
+    print('Splitting into training and validation...')
+    train_dataset = ds.take(round(num_distances * 0.8))
+    val_dataset = ds.skip(round(num_distances * 0.8))
+
+    # train_dataset = train_dataset.batch(32, drop_remainder=False)
+    # train_dataset = train_dataset.prefetch(tf.data.AUTOTUNE)
+    #
+    # val_dataset = val_dataset.batch(32, drop_remainder=False)
+    # val_dataset = val_dataset.prefetch(tf.data.AUTOTUNE)
+
     print('Running...')
     # getting size of the input encoding vectors
     vector_size = num_variants
@@ -75,7 +85,21 @@ def main():
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
 
     # training model
-    siamese_model.fit(ds, epochs=10)
+    siamese_model.fit(train_dataset, epochs=3, validation_data=val_dataset)
+
+    embedding = model.build_embedding(vector_size)
+    sample = next(iter(train_dataset))
+    # visualize(*sample)
+    #
+    sample1, sample2 = sample[:2]
+    sample1_embedding, sample2_embedding = (
+        embedding(sample1),
+        embedding(sample2)
+    )
+
+    cosine_similarity = tf.metrics.CosineSimilarity()
+    similarity = cosine_similarity(sample1_embedding, sample2_embedding)
+    print("Similarity:", similarity.numpy())
 
 if __name__ == '__main__':
     main()

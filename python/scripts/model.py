@@ -1,6 +1,4 @@
 import tensorflow as tf
-import math
-import numpy as np
 
 def build_base_cnn(vector_size):
     """
@@ -31,6 +29,29 @@ def build_base_cnn(vector_size):
     base_cnn_model = tf.keras.Model(inputs=inputs, outputs=outputs, name="base_cnn")
 
     return base_cnn_model
+
+def build_embedding(vector_size):
+    # Input Layer
+    inputs = tf.keras.Input(shape=(vector_size, 1))
+
+    # Convolution Layers
+    ## filters = number of filters
+    ## kernel_size = length of convolution window
+    x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(inputs)
+    x = tf.keras.layers.BatchNormalization()(x)
+    x = tf.keras.layers.Conv1D(filters=6, kernel_size=3, activation="relu")(x)
+    x = tf.keras.layers.BatchNormalization()(x)
+
+    x = tf.keras.layers.GlobalAveragePooling1D()(x)
+
+    # Outputs
+    outputs = tf.keras.layers.Dense(80)(x)
+    # outputs = tf.keras.layers.Dense(20)(x)
+
+    # base CNN model
+    base_cnn = tf.keras.Model(inputs=inputs, outputs=outputs, name="base_cnn")
+    embedding = tf.keras.Model(base_cnn.input, outputs, name="Embedding")
+    return embedding
 
 def build_siamese_network(vector_size):
     """
@@ -113,9 +134,6 @@ class SiameseModel(tf.keras.Model):
         loss = tf.keras.metrics.mean_squared_error(
             predicted_distance, target_distances
         )
-        # if (tf.reduce_any(tf.math.is_nan(loss))):
-        #     print(sample_data, target_distances, predicted_distance)
-
         return loss
 
     @property
