@@ -1,4 +1,5 @@
 import tensorflow as tf
+import sampling
 
 def build_dataset_from_file(CNN_input_file):
     """
@@ -43,3 +44,14 @@ def build_dataset_from_file(CNN_input_file):
     # puts 1 element into a batch
     full_ds_batch = full_ds.batch(2)
     return full_ds_batch
+
+def sample_without_replacement(sample_IDs_file, sample_encodings_file,
+                               pairwise_distances_file):
+    sample_IDs = sampling.get_sample_ID_list(sample_IDs_file)
+    ID_encoding_dict = sampling.get_ID_encoding_dict(sample_IDs,
+                                                     sample_encodings_file)
+    pairwise_dict = sampling.get_pairwise_distances_dict(sample_IDs,
+                                                         pairwise_distances_file)
+
+
+    return ID_encoding_dict
