@@ -46,12 +46,28 @@ def build_dataset_from_file(CNN_input_file):
     return full_ds_batch
 
 def sample_without_replacement(sample_IDs_file, sample_encodings_file,
-                               pairwise_distances_file):
+                               pairwise_distances_file, num_samples):
+
     sample_IDs = sampling.get_sample_ID_list(sample_IDs_file)
+    sample_encodings_list = sampling.get_encoding_list(sample_encodings_file)
+    distances_list = sampling.get_distances_list(pairwise_distances_file)
+
     ID_encoding_dict = sampling.get_ID_encoding_dict(sample_IDs,
                                                      sample_encodings_file)
     pairwise_dict = sampling.get_pairwise_distances_dict(sample_IDs,
                                                          pairwise_distances_file)
+    dataset = tf.data.Dataset.from_generator(
+        # the generator has to be callable and take no args
+        # that's annoying, but we can wrap the call to sample_pairs in a lambda
+        lambda: sampling.sample_pairs(sample_IDs, pairwise_dict),
+        # dtypes of the tensors -- need to adapt to real data
+        (tf.string, tf.string, tf.float32),
+        # shapes of tensors -- need to adapt to real data
+        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
+    )
+
+    for s1, s2, d in dataset:
+        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
 
 
-    return ID_encoding_dict
+    return dataset
