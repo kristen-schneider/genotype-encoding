@@ -49,7 +49,8 @@ def main():
     #    ds, ds_output_file, compression='GZIP'
     #)
     ds = basic_ds.sample_without_replacement(sample_IDs_file, sample_encodings_file,
-                               pairwise_distances_file, num_samples)
+                                             pairwise_distances_file,
+                                             num_samples, num_variants)
     # # load dataset from file
     # ds = tf.data.experimental.load(
     #     ds_output_file, element_spec=None, compression='GZIP', reader_func=None

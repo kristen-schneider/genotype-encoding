@@ -44,8 +44,8 @@ def main():
                 samplej_ID = all_IDs[sample_j]
                 samplej_encoding = all_encodings[sample_j]
                 distance = compute_euclidean_distance(samplei_encoding, samplej_encoding)
-                pairwise_data = samplei_ID + '\t' \
-                                + samplej_ID + '\t'\
+                pairwise_data = samplei_encoding + '\t' \
+                                + samplej_encoding + '\t'\
                                 + str(distance) + '\n'
                 pd_file.write(pairwise_data)
 

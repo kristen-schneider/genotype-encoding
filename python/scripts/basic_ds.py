@@ -46,17 +46,18 @@ def build_dataset_from_file(CNN_input_file):
     return full_ds_batch
 
 def sample_without_replacement(sample_IDs_file, sample_encodings_file,
-                               pairwise_distances_file, num_samples):
+                               pairwise_distances_file,
+                               num_samples, num_variants):
 
     print('...getting lists')
-    sample_IDs = sampling.get_sample_ID_list(sample_IDs_file)
+    sample_IDs_list = sampling.get_sample_ID_list(sample_IDs_file)
     sample_encodings_list = sampling.get_encoding_list(sample_encodings_file)
     # distances_list = sampling.get_distances_list(pairwise_distances_file)
 
     # ID_encoding_dict = sampling.get_ID_encoding_dict(sample_IDs,
     #                                                  sample_encodings_file)
     print('...making pairwise dict')
-    pairwise_dict = sampling.get_pairwise_distances_dict(sample_IDs,
+    pairwise_dict = sampling.get_pairwise_distances_dict(sample_encodings_list,
                                                          pairwise_distances_file)
     print('...sampling without replacement, converting to tensorflow dataset')
     dataset = tf.data.Dataset.from_generator(
@@ -66,7 +67,7 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
         # dtypes of the tensors -- need to adapt to real data
         (tf.int32, tf.int32, tf.float32),
         # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape(40,), tf.TensorShape(40,), tf.TensorShape([])),
+        (tf.TensorShape(num_variants,), tf.TensorShape(num_variants,), tf.TensorShape([])),
     )
 
     for s1, s2, d in dataset:
