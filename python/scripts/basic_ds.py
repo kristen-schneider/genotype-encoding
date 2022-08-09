@@ -65,9 +65,9 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
         # that's annoying, but we can wrap the call to sample_pairs in a lambda
         lambda: sampling.sample_pairs(sample_encodings_list, pairwise_dict),
         # dtypes of the tensors -- need to adapt to real data
-        (tf.int32, tf.int32, tf.float32),
+        (tf.string, tf.string, tf.float32),
         # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape(num_variants,), tf.TensorShape(num_variants,), tf.TensorShape([])),
+        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
     )
 
     for s1, s2, d in dataset:

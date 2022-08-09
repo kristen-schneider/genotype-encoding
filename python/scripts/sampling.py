@@ -74,7 +74,7 @@ def get_encoding_list(sample_encodings_file):
     all_sample_encodings = []
     f = open(sample_encodings_file, 'r')
     for line in f:
-        encoding = [i for i in line.strip()]
+        encoding = line.strip()
         all_sample_encodings.append(encoding)
     f.close()
 
