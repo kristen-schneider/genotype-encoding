@@ -114,6 +114,9 @@ int slice(string vcf_file, int segment_size, string base_name, string out_dir){
 				out_file_stream.open(out_vcf_segment_name, ios_base::app);	
 
 			}
+
+			// to make things stop early 
+			if (segment_count == 10){break;}
 		}
 		out_file_stream.close();	
 		cout << "SEGMENT LENGTH: " << segment_size << endl;
