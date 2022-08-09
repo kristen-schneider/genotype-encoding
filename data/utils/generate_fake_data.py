@@ -6,7 +6,7 @@ num_samples = int(sys.argv[1])
 num_variants = int(sys.argv[2])
 sample_ID_file = sys.argv[3]
 sample_encoding_file = sys.argv[4]
-pairwiase_distance_file = sys.argv[5]
+pairwise_distance_file = sys.argv[5]
 
 def main():
 
@@ -31,7 +31,7 @@ def main():
 
     # write pairwise distances to file
     print('writing pairwise distances to file')
-    pd_file = open(pairwiase_distance_file, 'w')
+    pd_file = open(pairwise_distance_file, 'w')
     pd_file.write('sample1_ID\tsample2_ID\tdistance\n')
 
     for sample_i in range(num_samples):
