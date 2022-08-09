@@ -50,16 +50,16 @@ def main():
     # Serialize dataset and write to tfrecord
     # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
 
-    #ds = basic_ds.build_dataset_from_file(CNN_input_file)
-    #print('Writing dataset to zip file...')
-    #tf.data.experimental.save(
-    #    ds, ds_output_file, compression='GZIP'
-    #)
+    ds = basic_ds.build_dataset_from_file(CNN_input_file)
+    print('Writing dataset to zip file...')
+    tf.data.experimental.save(
+        ds, ds_output_file, compression='GZIP'
+    )
 
     # load dataset from file
-    ds = tf.data.experimental.load(
-        ds_output_file, element_spec=None, compression='GZIP', reader_func=None
-    )
+    #ds = tf.data.experimental.load(
+    #    ds_output_file, element_spec=None, compression='GZIP', reader_func=None
+    #)
     print('Done.')
     print()
 
@@ -73,20 +73,23 @@ def main():
     # val_dataset = val_dataset.batch(32, drop_remainder=False)
     # val_dataset = val_dataset.prefetch(tf.data.AUTOTUNE)
 
-    print('Running...')
     # getting size of the input encoding vectors
     vector_size = num_variants
 
     # building network
+    print('Building Network...')
     siamese_network = model.build_siamese_network(vector_size)
 
     # building model
+    print('Building Model...')
     siamese_model = model.SiameseModel(siamese_network)
     siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
 
     # training model
+    print('Training Model...')
     siamese_model.fit(train_dataset, epochs=3, validation_data=val_dataset)
 
+    print('Embeddings...')
     embedding = model.build_embedding(vector_size)
     sample = next(iter(train_dataset))
     # visualize(*sample)
