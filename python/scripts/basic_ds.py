@@ -59,14 +59,14 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
     dataset = tf.data.Dataset.from_generator(
         # the generator has to be callable and take no args
         # that's annoying, but we can wrap the call to sample_pairs in a lambda
-        lambda: sampling.sample_pairs(sample_IDs, pairwise_dict),
+        lambda: sampling.sample_pairs(sample_encodings_list, pairwise_dict),
         # dtypes of the tensors -- need to adapt to real data
         (tf.string, tf.string, tf.float32),
         # shapes of tensors -- need to adapt to real data
         (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
     )
 
-    # for s1, s2, d in dataset:
-    #     print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
+    for s1, s2, d in dataset:
+        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
 
     return dataset
