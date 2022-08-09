@@ -66,8 +66,7 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
         (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
     )
 
-    for s1, s2, d in dataset:
-        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
-
+    # for s1, s2, d in dataset:
+    #     print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
 
     return dataset

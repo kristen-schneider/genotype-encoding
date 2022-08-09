@@ -54,8 +54,8 @@ def main():
     # ds = tf.data.experimental.load(
     #     ds_output_file, element_spec=None, compression='GZIP', reader_func=None
     # )
-    # print('Done.')
-    # print()
+    print('Done.')
+    print()
     #
     # print('Splitting into training and validation...')
     # train_dataset = ds.take(round(num_distances * 0.8))
