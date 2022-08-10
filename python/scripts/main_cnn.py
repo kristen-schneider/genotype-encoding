@@ -14,15 +14,6 @@ import utils
 
 import tensorflow as tf
 
-#CNN_input_file = '../data/fake_input.txt'
-#sampleIDs_file = '../data/ALL.chr14.samples'
-#sampleEncoding_file = '../data/ALL.chr14.encoded'
-#pairwiseIBD_file = '../data/ALL.chr14.genome'
-#tf_records_dir = '../data/tfrecords/'
-
-#sampleIDs_file = sys.argv[1]
-#sampleEncoding_file = sys.argv[2]
-#plinkIBD_file = sys.argv[3]
 sample_IDs_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
 ID_distances_file = sys.argv[3]
@@ -82,7 +73,7 @@ def main():
 
     # training model
     print('Training Model...')
-    siamese_model.fit(train_dataset, epochs=3, validation_data=val_dataset)
+    siamese_model.fit(train_dataset, epochs=1, validation_data=val_dataset)
 
     # getting size of the input encoding vectors
     vector_size = num_variants
