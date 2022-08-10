@@ -1,5 +1,3 @@
-# input-files
-ENCODED VCF: encoding file with sample ID and encoding
+# Segment and Encode VCF
 
-# genotype-encoding
-Sample data files do not represent or simulated real data.
+`snakemake`
