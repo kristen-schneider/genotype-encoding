@@ -53,6 +53,14 @@ def main():
                                              ID_distances_file,
                                              encoding_distances_file,
                                              num_samples, num_variants)
+    # ds = ds.batch(2)
+    # for s1, s2, s3 in ds:
+    #     sample1_ds_float = s1.map(lambda x: int(x))
+    #     sample2_ds_float = s2.map(lambda x: int(x))
+    #     distances_ds_float = s3.map(lambda x: float(x))
+    # ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
+    # ds = ds.batch(2)
+
     # # load dataset from file
     # ds = tf.data.experimental.load(
     #     ds_output_file, element_spec=None, compression='GZIP', reader_func=None
@@ -65,7 +73,7 @@ def main():
     # Serialize dataset and write to tfrecord
     # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
 
-    # ds = basic_ds.build_dataset_from_file(CNN_input_file)
+    # ds = basic_ds.build_dataset_from_file(encoding_distances_file)
     # print('Writing dataset to zip file...')
     # tf.data.experimental.save(
     #     ds, ds_output_file, compression='GZIP'
@@ -95,41 +103,19 @@ def main():
     # building model
     print('Building Model...')
     siamese_model = model.SiameseModel(siamese_network)
-    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
+    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001), run_eagerly=True)
 
     # training model
     print('Training Model...')
     siamese_model.fit(train_dataset, epochs=3, validation_data=val_dataset)
 
-    print('Embeddings...')
-    embedding = model.build_embedding(vector_size)
-    sample = next(iter(train_dataset))
-    # visualize(*sample)
-
-    # train_dataset = train_dataset.batch(32, drop_remainder=False)
-    # train_dataset = train_dataset.prefetch(tf.data.AUTOTUNE)
-    #
-    # val_dataset = val_dataset.batch(32, drop_remainder=False)
-    # val_dataset = val_dataset.prefetch(tf.data.AUTOTUNE)
-
-    print('Running...')
     # getting size of the input encoding vectors
     vector_size = num_variants
 
-    # building network
-    siamese_network = model.build_siamese_network(vector_size)
-
-    # building model
-    siamese_model = model.SiameseModel(siamese_network)
-    siamese_model.compile(optimizer=tf.keras.optimizers.Adam(0.0001))
-
-    # training model
-    siamese_model.fit(train_dataset, epochs=3, validation_data=val_dataset)
-
+    print('Embeddings...')
     embedding = model.build_embedding(vector_size)
     sample = next(iter(train_dataset))
-    # visualize(*sample)
-    #
+
     sample1, sample2 = sample[:2]
     sample1_embedding, sample2_embedding = (
         embedding(sample1),

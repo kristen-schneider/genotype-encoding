@@ -30,7 +30,7 @@ def sample_without_replacement(n: int) -> list[int]:
     return random.sample(range(n), n)
 
 
-def sample_pairs(samples: Sequence, distances: Mapping[str, Mapping[str, float]]):
+def sample_pairs(samples: Sequence, distances: Mapping[int, Mapping[int, float]]):
     """
     Yield random pairs of samples and distances
     - samples: like a list or np array containing the samples

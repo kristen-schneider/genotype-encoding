@@ -69,10 +69,10 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
         # dtypes of the tensors -- need to adapt to real data
         (tf.int32, tf.int32, tf.float32),
         # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape(num_variants,), tf.TensorShape(num_variants,), tf.TensorShape([])),
-    )
+        (tf.TensorShape((num_variants,)), tf.TensorShape((num_variants,)), tf.TensorShape(())),
+    ).batch(2)
 
-    for s1, s2, d in dataset:
-        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
+    # for s1, s2, d in dataset:
+    #     print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
 
     return dataset
