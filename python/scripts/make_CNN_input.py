@@ -3,12 +3,13 @@ import sys
 sample_IDs_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
 plink_IBD_file = sys.argv[3]
-CNN_input_file = sys.argv[4]
+ID_CNN_file = sys.argv[4]
+encoding_CNN_file = sys.argv[5]
 
 def main():
     ID_list = sample_IDs_list(sample_IDs_file)
     ID_encoding_dictionary = ID_encoding_dict(ID_list, sample_encodings_file)
-    write_CNN_input(ID_encoding_dictionary, plink_IBD_file, CNN_input_file)
+    write_CNN_input(ID_encoding_dictionary, plink_IBD_file, ID_CNN_file, encoding_CNN_file)
 
 def sample_IDs_list(sample_IDs_file):
     ID_list = []
@@ -36,10 +37,11 @@ def ID_encoding_dict(ID_list, sample_encodings_file):
 
     return ID_encoding_dictionary
 
-def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, CNN_input_file):
+def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, ID_CNN_file, encoding_CNN_file):
 
     plink_f = open(plink_IBD_file, 'r')
-    CNN_f = open(CNN_input_file, 'w')
+    ID_CNN_f = open(ID_CNN_file, 'w')
+    encoding_CNN_f = open(encoding_CNN_file, 'w')
 
     header = None
     for line in plink_f:
@@ -54,12 +56,14 @@ def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, CNN_input_file):
             ID1_encoding = ID_encoding_dictionary[ID1]
             ID2_encoding = ID_encoding_dictionary[ID2]
         
-
-            pairwise_entry = ID1_encoding + '\t' + ID2_encoding + '\t' + str(distance) + '\n'
-            CNN_f.write(pairwise_entry)
+            ID_pairwise_entry = ID1 + '\t' + ID2 + '\t' + str(distance) + '\n'
+            ID_CNN_f.write(ID_pairwise_entry)
+            encoding_pairwise_entry = ID1_encoding + '\t' + ID2_encoding + '\t' + str(distance) + '\n'
+            encoding_CNN_f.write(encoding_pairwise_entry)
 
     plink_f.close()
-    CNN_f.close()
+    ID_CNN_f.close()
+    encoding_CNN_f.close()
 
 
 if __name__ == '__main__':
