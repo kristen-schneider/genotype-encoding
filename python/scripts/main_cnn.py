@@ -87,19 +87,19 @@ def main():
     # getting size of the input encoding vectors
     vector_size = num_variants
 
-    print('Embeddings...')
-    embedding = model.build_embedding(vector_size)
-    sample = next(iter(train_dataset))
-
-    sample1, sample2 = sample[:2]
-    sample1_embedding, sample2_embedding = (
-        embedding(sample1),
-        embedding(sample2)
-    )
-
-    cosine_similarity = tf.metrics.CosineSimilarity()
-    similarity = cosine_similarity(sample1_embedding, sample2_embedding)
-    print("Similarity:", similarity.numpy())
+    # print('Embeddings...')
+    # embedding = model.build_embedding(vector_size)
+    # sample = next(iter(train_dataset))
+    #
+    # sample1, sample2 = sample[:2]
+    # sample1_embedding, sample2_embedding = (
+    #     embedding(sample1),
+    #     embedding(sample2)
+    # )
+    #
+    # cosine_similarity = tf.metrics.CosineSimilarity()
+    # similarity = cosine_similarity(sample1_embedding, sample2_embedding)
+    # print("Similarity:", similarity.numpy())
 
 if __name__ == '__main__':
     main()
