@@ -93,12 +93,12 @@ def get_distances_list(pairwise_distances_file):
     f.close()
     return distances_list
 
-def get_pairwise_distances_dict(sample_IDs, pairwise_distances_file):
+def get_pairwise_distances_dict(ID_index_dict, ID_encoding_dict, ID_distances_file):
     pairwise_dict = defaultdict(dict)
     # for k in pairwise_dict.keys():
     #     pairwise_dict[k] = dict()
 
-    f = open(pairwise_distances_file, 'r')
+    f = open(ID_distances_file, 'r')
     header = None
     for line in f:
         if header == None:
@@ -106,10 +106,10 @@ def get_pairwise_distances_dict(sample_IDs, pairwise_distances_file):
         else:
             A = line.strip().split()
             sample1_ID = A[0]
-            sample1_i = sample_IDs.index(sample1_ID)
+            sample1_i = ID_index_dict[sample1_ID]
 
             sample2_ID = A[1]
-            sample2_i = sample_IDs.index(sample2_ID)
+            sample2_i = ID_index_dict[sample2_ID]
 
             distance = float(A[2])
             pairwise_dict[sample1_i][sample2_i] = distance

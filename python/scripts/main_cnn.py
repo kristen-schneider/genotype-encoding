@@ -25,8 +25,9 @@ import tensorflow as tf
 #plinkIBD_file = sys.argv[3]
 sample_IDs_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
-pairwise_distances_file = sys.argv[3]
-ds_out_dir = sys.argv[4]
+ID_distances_file = sys.argv[3]
+encoding_distances_file = sys.argv[4]
+# ds_out_dir = sys.argv[4]
 #tf_records_dir = sys.argv[4]
 
 def main():
@@ -49,7 +50,8 @@ def main():
     #    ds, ds_output_file, compression='GZIP'
     #)
     ds = basic_ds.sample_without_replacement(sample_IDs_file, sample_encodings_file,
-                                             pairwise_distances_file,
+                                             ID_distances_file,
+                                             encoding_distances_file,
                                              num_samples, num_variants)
     # # load dataset from file
     # ds = tf.data.experimental.load(
