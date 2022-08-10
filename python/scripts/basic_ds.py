@@ -60,7 +60,6 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
                                                      sample_encodings_file)
     print('...making pairwise dict')
     pairwise_dict = sampling.get_pairwise_distances_dict(ID_index_dict,
-                                                         ID_encoding_dict,
                                                          ID_distances_file)
     print('...sampling without replacement, converting to tensorflow dataset')
     dataset = tf.data.Dataset.from_generator(
@@ -68,9 +67,9 @@ def sample_without_replacement(sample_IDs_file, sample_encodings_file,
         # that's annoying, but we can wrap the call to sample_pairs in a lambda
         lambda: sampling.sample_pairs(sample_encodings_list, pairwise_dict),
         # dtypes of the tensors -- need to adapt to real data
-        (tf.string, tf.string, tf.float32),
+        (tf.int32, tf.int32, tf.float32),
         # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
+        (tf.TensorShape(num_variants,), tf.TensorShape(num_variants,), tf.TensorShape([])),
     )
 
     for s1, s2, d in dataset:
