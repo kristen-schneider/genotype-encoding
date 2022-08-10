@@ -11,9 +11,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-    /*
-    / takes one config file
-    */
+    	/*
+    	/ takes one config file
+    	*/
 		
 	// read config file
 	cout << "Reading Config File..." << endl;
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 	string vcf_file = config_options["vcf_file"];
 	int segment_size = stoi(config_options["segment_size"]);
 	string out_dir = config_options["out_dir"];
-    string output_base_name = config_options["out_base_name"]
+    	string output_base_name = config_options["out_base_name"];
 	
 	// make encoding map
 	map<string, int> encoding_map = make_encoding_map(encoding_file);
