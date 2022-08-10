@@ -11,6 +11,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+    /*
+    / takes one config file
+    */
 		
 	// read config file
 	cout << "Reading Config File..." << endl;
@@ -23,23 +26,18 @@ int main(int argc, char* argv[]){
 	string vcf_file = config_options["vcf_file"];
 	int segment_size = stoi(config_options["segment_size"]);
 	string out_dir = config_options["out_dir"];
+    string output_base_name = config_options["out_base_name"]
 	
 	// make encoding map
 	map<string, int> encoding_map = make_encoding_map(encoding_file);
-	
-	
-	string output_base_name = "ALL.chr14";
-	
+
 	// slice vcf into segments
 	cout << "Slicing VCF..." << endl;
-	int num_segments = 0;
-	num_segments = slice(vcf_file, segment_size, output_base_name, out_dir);	
+	int num_segments = slice(vcf_file, segment_size, output_base_name, out_dir);
 
 	// encoded vcf segments 
 	cout << "Encoding VCF..." << endl;
 	write_all_segments(num_segments, encoding_map, out_dir, output_base_name);
-	//write_encoded_vcf(vcf_out_file, encoding_map, encoding_out_file);
-
 
 	return 0;
 }

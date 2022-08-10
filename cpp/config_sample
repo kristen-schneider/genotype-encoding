@@ -5,3 +5,5 @@ vcf_file=../precision-medicine/data/vcf/ALL.chr14.shapeit2_integrated_snvindels_
 segment_size=5000
 
 out_dir=./data/segments/
+
+out_base_name=ALL.chr14
