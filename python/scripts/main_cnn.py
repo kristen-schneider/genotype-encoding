@@ -44,45 +44,20 @@ def main():
     print()
     
     print('Building dataset...')
-    #ds = basic_ds.build_dataset_from_file(CNN_input_file)
-    #print('Writing dataset to zip file...')
-    #tf.data.experimental.save(
-    #    ds, ds_output_file, compression='GZIP'
-    #)
+    # ds = basic_ds.build_dataset_from_file(CNN_input_file)
     ds = basic_ds.sample_without_replacement(sample_IDs_file, sample_encodings_file,
                                              ID_distances_file,
                                              encoding_distances_file,
                                              num_samples, num_variants)
-    # ds = ds.batch(2)
-    # for s1, s2, s3 in ds:
-    #     sample1_ds_float = s1.map(lambda x: int(x))
-    #     sample2_ds_float = s2.map(lambda x: int(x))
-    #     distances_ds_float = s3.map(lambda x: float(x))
-    # ds = tf.data.Dataset.zip((sample1_ds_float, sample2_ds_float, distances_ds_float))
-    # ds = ds.batch(2)
-
-    # # load dataset from file
-    # ds = tf.data.experimental.load(
-    #     ds_output_file, element_spec=None, compression='GZIP', reader_func=None
-    # )
-    # Initialize DataWriter
-    #DW = tfrecord_ds.DataWriter(sampleIDs_file, sampleEncoding_file, pairwiseIBD_file, tf_records_dir)
-    #DW.to_tfrecords()
-    # Get basic dataset for whole file (string, string, float)
-    # basicDS = tfrecord_ds.DataWriter.get_basic_dataset(CNN_input_file)
-    # Serialize dataset and write to tfrecord
-    # tfrecord_ds.DataWriter.to_tfrecords(DW, W)
-
     # ds = basic_ds.build_dataset_from_file(encoding_distances_file)
     # print('Writing dataset to zip file...')
     # tf.data.experimental.save(
     #     ds, ds_output_file, compression='GZIP'
     # )
-
     # load dataset from file
-    #ds = tf.data.experimental.load(
-    #    ds_output_file, element_spec=None, compression='GZIP', reader_func=None
-    #)
+    # ds = tf.data.experimental.load(
+    #     ds_output_file, element_spec=None, compression='GZIP', reader_func=None
+    # )
     print('Done.')
     print()
 
