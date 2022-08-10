@@ -20,7 +20,8 @@ void write_all_segments(int num_segments, map<string, int> encoding_map, string 
 	/*
 	 * calls to write encoded vcf for all vcf segments in out_dir
 	 */
-	for (int i = 0; i < num_segments+1; i ++){
+	
+	for (int i = 0; i < num_segments; i ++){
 		string vcf_segment_file = output_dir + output_base_name \
 					  + ".seg." + to_string(i) + ".vcf";
 		string encoded_segment_file = output_dir + output_base_name \
