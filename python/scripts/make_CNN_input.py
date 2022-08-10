@@ -40,8 +40,12 @@ def ID_encoding_dict(ID_list, sample_encodings_file):
 def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, ID_CNN_file, encoding_CNN_file):
 
     plink_f = open(plink_IBD_file, 'r')
+    ID_header = 'sample1_ID\tsample2_ID\tdistance\n'
     ID_CNN_f = open(ID_CNN_file, 'w')
+    ID_CNN_f.write(ID_header)
+    encoding_header = 'sample1_encoding\tsample2_encoding\tdistance\n'
     encoding_CNN_f = open(encoding_CNN_file, 'w')
+    encoding_CNN_f.write(encoding_header)
 
     header = None
     for line in plink_f:
