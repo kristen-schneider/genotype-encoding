@@ -6,7 +6,8 @@ num_samples = int(sys.argv[1])
 num_variants = int(sys.argv[2])
 sample_ID_file = sys.argv[3]
 sample_encoding_file = sys.argv[4]
-pairwise_distance_file = sys.argv[5]
+ID_distance_file = sys.argv[5]
+encoding_distance_file = sys.argv[6]
 
 def main():
 
@@ -31,8 +32,13 @@ def main():
 
     # write pairwise distances to file
     print('writing pairwise distances to file')
-    pd_file = open(pairwise_distance_file, 'w')
-    pd_file.write('sample1_ID\tsample2_ID\tdistance\n')
+    IDOUT_file = open(ID_distance_file, 'w')
+    IDOUT_file.write('sample1_ID\tsample2_ID\tdistance\n')
+    
+    eOUT_file = open(encoding_distance_file, 'w')
+    eOUT_file.write('sample1_encoding\tsample2_encoding\tdistance\n')
+
+
 
     for sample_i in range(num_samples):
         samplei_ID = all_IDs[sample_i]
@@ -44,14 +50,21 @@ def main():
                 samplej_ID = all_IDs[sample_j]
                 samplej_encoding = all_encodings[sample_j]
                 distance = compute_euclidean_distance(samplei_encoding, samplej_encoding)
-                pairwise_data = samplei_encoding + '\t' \
-                                + samplej_encoding + '\t'\
+             
+                ID_distance_data = samplei_ID + '\t' \
+                                + samplej_ID + '\t' \
                                 + str(distance) + '\n'
-                pd_file.write(pairwise_data)
+                IDOUT_file.write(ID_distance_data)
+
+                encoding_distance_data = samplei_encoding + '\t' \
+                                + samplej_encoding + '\t' \
+                                + str(distance) + '\n'
+                eOUT_file.write(encoding_distance_data)
 
     id_file.close()
     e_file.close()
-    pd_file.close()
+    IDOUT_file.close()
+    eOUT_file.close()
 
 def generate_sample_IDs(num_samples):
     sample_IDs = []
