@@ -30,7 +30,7 @@ def sample_without_replacement(n: int) -> list[int]:
     return random.sample(range(n), n)
 
 
-def sample_pairs(samples: Sequence, distances: Mapping[str, Mapping[str, float]]):
+def sample_pairs(samples: Sequence, distances: Mapping[int, Mapping[int, float]]):
     """
     Yield random pairs of samples and distances
     - samples: like a list or np array containing the samples
@@ -75,7 +75,8 @@ def get_encoding_list(sample_encodings_file):
     f = open(sample_encodings_file, 'r')
     for line in f:
         encoding = line.strip()
-        all_sample_encodings.append(encoding)
+        encoding_list_ints = [int(i) for i in encoding]
+        all_sample_encodings.append(encoding_list_ints)
     f.close()
 
     return all_sample_encodings
@@ -93,7 +94,7 @@ def get_distances_list(pairwise_distances_file):
     f.close()
     return distances_list
 
-def get_pairwise_distances_dict(ID_index_dict, ID_encoding_dict, ID_distances_file):
+def get_pairwise_distances_dict(ID_index_dict, ID_distances_file):
     pairwise_dict = defaultdict(dict)
     # for k in pairwise_dict.keys():
     #     pairwise_dict[k] = dict()
@@ -118,36 +119,36 @@ def get_pairwise_distances_dict(ID_index_dict, ID_encoding_dict, ID_distances_fi
     return pairwise_dict
 
 
-# ------------------------------------------------------------------------------
-# Test it out
-# ------------------------------------------------------------------------------
-if __name__ == "__main__":
-    # i < j ensures that we dont get redundant pairs i, j and j, i.
-    dummy_encodings = ['0p0', '1p0', '2p0', '3p0', '4p0',
-                       '5p0', '6p0', '7p0', '8p0', '9p0']
-    distances = defaultdict(dict)
-    for i in range(10):
-        for j in range(10):
-            if i < j:
-                distances[i][j] = random.random()
-
-    # Sanity check: 10 choose 2 = 45, so there should be 45 possible pairs
-    # Sampling from 10 pairs of items without replacement should give us 5 pairs.
-    # n = 0
-    # for i in distances:
-    #     for j in distances[i]:
-    #         print(f"{n}: {i=}, {j=}, {distances[i][j]=}")
-    #         n += 1
-
-    dataset = tf.data.Dataset.from_generator(
-        # the generator has to be callable and take no args
-        # that's annoying, but we can wrap the call to sample_pairs in a lambda
-        lambda: sample_pairs(dummy_encodings, distances),
-        # dtypes of the tensors -- need to adapt to real data
-        (tf.string, tf.string, tf.float32),
-        # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
-    )
-
-    for s1, s2, d in dataset:
-        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
+# # ------------------------------------------------------------------------------
+# # Test it out
+# # ------------------------------------------------------------------------------
+# if __name__ == "__main__":
+#     # i < j ensures that we dont get redundant pairs i, j and j, i.
+#     dummy_encodings = ['0p0', '1p0', '2p0', '3p0', '4p0',
+#                        '5p0', '6p0', '7p0', '8p0', '9p0']
+#     distances = defaultdict(dict)
+#     for i in range(10):
+#         for j in range(10):
+#             if i < j:
+#                 distances[i][j] = random.random()
+#
+#     # Sanity check: 10 choose 2 = 45, so there should be 45 possible pairs
+#     # Sampling from 10 pairs of items without replacement should give us 5 pairs.
+#     # n = 0
+#     # for i in distances:
+#     #     for j in distances[i]:
+#     #         print(f"{n}: {i=}, {j=}, {distances[i][j]=}")
+#     #         n += 1
+#
+#     dataset = tf.data.Dataset.from_generator(
+#         # the generator has to be callable and take no args
+#         # that's annoying, but we can wrap the call to sample_pairs in a lambda
+#         lambda: sample_pairs(dummy_encodings, distances),
+#         # dtypes of the tensors -- need to adapt to real data
+#         (tf.string, tf.string, tf.float32),
+#         # shapes of tensors -- need to adapt to real data
+#         (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
+#     )
+#
+#     for s1, s2, d in dataset:
+#         print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")

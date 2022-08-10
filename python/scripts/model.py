@@ -1,4 +1,5 @@
 import tensorflow as tf
+# tf.enable_eager_execution()
 
 def build_base_cnn(vector_size):
     """
@@ -109,6 +110,9 @@ class SiameseModel(tf.keras.Model):
         sample_data = data[:2]
         target_data = data[2]
 
+        # print(sample_data[0].numpy())
+        # print(target_data.numpy())
+
         with tf.GradientTape() as tape:
             loss = self._compute_loss(sample_data, target_data)
 
@@ -121,8 +125,10 @@ class SiameseModel(tf.keras.Model):
         self.loss_tracker.update_state(loss)
         return {"loss": self.loss_tracker.result()}
 
-    def test_step(self, data, target_distances):
-        loss = self._compute_loss(data, target_distances)
+    def test_step(self, data):
+        sample_data = data[:2]
+        target_data = data[2]
+        loss = self._compute_loss(sample_data, target_data)
 
         self.loss_tracker.update_state(loss)
         return {"loss": self.loss_tracker.result()}
