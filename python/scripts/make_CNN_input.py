@@ -41,6 +41,9 @@ def write_CNN_input(ID_encoding_dictionary, plink_IBD_file, CNN_input_file):
     plink_f = open(plink_IBD_file, 'r')
     CNN_f = open(CNN_input_file, 'w')
 
+    header = 'encoding1\tencoding\tdistances\n'
+    CNN_f.write(header)
+
     header = None
     for line in plink_f:
         if (header == None):
