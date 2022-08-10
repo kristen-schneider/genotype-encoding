@@ -118,36 +118,36 @@ def get_pairwise_distances_dict(sample_IDs, pairwise_distances_file):
     return pairwise_dict
 
 
-# ------------------------------------------------------------------------------
-# Test it out
-# ------------------------------------------------------------------------------
-if __name__ == "__main__":
-    # i < j ensures that we dont get redundant pairs i, j and j, i.
-    dummy_encodings = ['0p0', '1p0', '2p0', '3p0', '4p0',
-                       '5p0', '6p0', '7p0', '8p0', '9p0']
-    distances = defaultdict(dict)
-    for i in range(10):
-        for j in range(10):
-            if i < j:
-                distances[i][j] = random.random()
-
-    # Sanity check: 10 choose 2 = 45, so there should be 45 possible pairs
-    # Sampling from 10 pairs of items without replacement should give us 5 pairs.
-    # n = 0
-    # for i in distances:
-    #     for j in distances[i]:
-    #         print(f"{n}: {i=}, {j=}, {distances[i][j]=}")
-    #         n += 1
-
-    dataset = tf.data.Dataset.from_generator(
-        # the generator has to be callable and take no args
-        # that's annoying, but we can wrap the call to sample_pairs in a lambda
-        lambda: sample_pairs(dummy_encodings, distances),
-        # dtypes of the tensors -- need to adapt to real data
-        (tf.string, tf.string, tf.float32),
-        # shapes of tensors -- need to adapt to real data
-        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
-    )
-
-    for s1, s2, d in dataset:
-        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")
+## ------------------------------------------------------------------------------
+## Test it out
+## ------------------------------------------------------------------------------
+#if __name__ == "__main__":
+#    # i < j ensures that we dont get redundant pairs i, j and j, i.
+#    dummy_encodings = ['0p0', '1p0', '2p0', '3p0', '4p0',
+#                       '5p0', '6p0', '7p0', '8p0', '9p0']
+#    distances = defaultdict(dict)
+#    for i in range(10):
+#        for j in range(10):
+#            if i < j:
+#                distances[i][j] = random.random()
+#
+#    # Sanity check: 10 choose 2 = 45, so there should be 45 possible pairs
+#    # Sampling from 10 pairs of items without replacement should give us 5 pairs.
+#    # n = 0
+#    # for i in distances:
+#    #     for j in distances[i]:
+#    #         print(f"{n}: {i=}, {j=}, {distances[i][j]=}")
+#    #         n += 1
+#
+#    dataset = tf.data.Dataset.from_generator(
+#        # the generator has to be callable and take no args
+#        # that's annoying, but we can wrap the call to sample_pairs in a lambda
+#        lambda: sample_pairs(dummy_encodings, distances),
+#        # dtypes of the tensors -- need to adapt to real data
+#        (tf.string, tf.string, tf.float32),
+#        # shapes of tensors -- need to adapt to real data
+#        (tf.TensorShape([]), tf.TensorShape([]), tf.TensorShape([])),
+#    )
+#
+#    for s1, s2, d in dataset:
+#        print(f"{s1.numpy() = }, {s2.numpy() = }, {d.numpy() = }")

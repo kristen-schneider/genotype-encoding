@@ -28,7 +28,6 @@ sample_encodings_file = sys.argv[2]
 pairwise_distances_file = sys.argv[3]
 
 
-for i in sys.argv: print(i)
 #ds_out_dir = sys.argv[4]
 #tf_records_dir = sys.argv[4]
 
