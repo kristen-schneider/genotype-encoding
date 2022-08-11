@@ -1,0 +1,4 @@
+segments_config:
+  ./cpp/config_sample
+segments_out_dir:
+  ./data/segments/seg_100/

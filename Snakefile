@@ -1,10 +1,10 @@
-#configfile: "config.yaml"
+configfile: "config.yaml"
 
 rule all:
 	input:
-		"data/segments/seg_1000/ALL.chr14.seg.0.vcf",
-		"data/segments/seg_1000/ALL.chr14.seg.0.encoding"
-	
+		config[segments_out_dir]"segments.vcf.done",
+		config[segments_out_dir]"segments.encoding.done"
+
 rule segment_vcf_COMPILE:
 	input:
 		main="cpp/src/main.cpp",
@@ -39,5 +39,7 @@ rule segment_vcf_RUN:
 	message: 
 		"Executing segment_vcf"
 	shell:
-		"./{input.bin} {input.config_file}"
+		"./{input.bin} {input.config_file} /
+		"&& touch" config[segments_out_dir]"segments.encoding.done"
+
 
