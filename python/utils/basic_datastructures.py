@@ -1,5 +1,9 @@
+import sys
 from collections import defaultdict
-from python.utils import distance_calculations
+
+sys.path.insert(1, '~genotype-encoding/python/utils/')
+import distance_calculations
+#from python.utils import distance_calculations
 
 def get_sample_ID_list(sample_ID_file):
     all_sample_IDs = []

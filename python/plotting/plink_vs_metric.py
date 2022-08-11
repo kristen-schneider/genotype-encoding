@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import sys
 
-from python.utils import basic_datastructures
+sys.path.insert(1, '/home/sdp/genotype-encoding/python/utils/')
+import basic_datastructures
 
 sample_ID_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
@@ -30,9 +31,10 @@ def genotype_plink():
         except KeyError:
             continue
 
-    plt.figure(figsize=(20,20))
+    #plt.figure(figsize=(20,20))
     plt.scatter(plink_data, euclidean_data)
-    plt.xlabel('PLINK DISTANCE')
+    plt.title('PLINK IBD vs EUCLIDEAN DISTANCE')
+    plt.xlabel('PLINK SIMILARITY')
     plt.ylabel('EUCLIDEAN DISTANCE')
     plt.savefig(plink_euclidean_png)
 
