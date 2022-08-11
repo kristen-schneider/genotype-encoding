@@ -4,10 +4,6 @@ samples_file = sys.argv[1]
 encoding_file = sys.argv[2]
 out_file = sys.argv[3]
 
-#samples_file = '../data/ALL.chr14.samples'
-#encoding_file = '../data/ALL.chr14.encoded'
-#out_file = '../data/ALL.chr14.IBD1'
-
 def main():
     sampleIDs_list = make_sample_IDs_list(samples_file)
     encodings_list = make_encodings_list(encoding_file)
