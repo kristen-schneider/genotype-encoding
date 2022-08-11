@@ -6,6 +6,7 @@ from python.utils import basic_datastructures
 sample_ID_file = sys.argv[1]
 sample_encodings_file = sys.argv[2]
 plink_file = sys.argv[3]
+plink_euclidean_png = sys.argv[4]
 
 def main():
     genotype_plink()
@@ -24,12 +25,16 @@ def genotype_plink():
     for sample in sampleIDs:
         # plink doesnt report self comparison
         try:
-            euclidean_data.append(query_euclidean_dict[sample])
             plink_data.append(query_plink_dict[sample])
+            euclidean_data.append(query_euclidean_dict[sample])
+        except KeyError:
+            continue
 
-    x = 'debug'
-
-
+    plt.figure(figsize=(20,20))
+    plt.scatter(plink_data, euclidean_data)
+    plt.xlabel('PLINK DISTANCE')
+    plt.ylabel('EUCLIDEAN DISTANCE')
+    plt.savefig(plink_euclidean_png)
 
 if __name__ == '__main__':
     main()
