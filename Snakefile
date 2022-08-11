@@ -2,22 +2,21 @@ configfile: "config.yaml"
 
 rule all:
 	input:
-		config[segments_out_dir]"segments.vcf.done",
-		config[segments_out_dir]"segments.encoding.done"
+		expand(config["segments_out_dir"], segments.encoding.done)
 
 rule segment_vcf_COMPILE:
 	input:
-		main="cpp/src/main.cpp",
-		read_config="cpp/src/read_config.cpp",
-		map_encodings="cpp/src/map_encodings.cpp",
-		slice_vcf="cpp/src/slice_vcf.cpp",
-		encode_vcf="cpp/src/encode_vcf.cpp",
-		include="cpp/include/"
+		main=expand({config[src_dir]}, "main.cpp"),
+		read_config=expand(config[src_dir], "read_config.cpp"),
+		map_encodings=expand(config[src_dir], "map_encodings.cpp"),
+		slice_vcf=expand(config[src_dir], "slice_vcf.cpp"),
+		encode_vcf=expand(config[src_dir], "encode_vcf.cpp"),
+		include=config[include_dir]
 
 	output:
-		bin="cpp/bin/segment"
+		bin=expand(config[bin_dir], "segment")
 	message:
-		"Compiling segment_vcf"
+		"Compiling--slice vcf into segments and encode"
 	shell:
 		"g++ {input.main}" \
 			" {input.read_config}" \
@@ -31,15 +30,12 @@ rule segment_vcf_COMPILE:
 
 rule segment_vcf_RUN:
 	input:
-		bin="cpp/bin/segment",
-		config_file="cpp/config_sample"
+		bin=expand(config[bin_dir], "segment"),
+		config_file=config[segments_config]
 	output:
-		vcf_segment="data/segments/seg_1000/ALL.chr14.seg.0.vcf",
-		encoding_segment="data/segments/seg_1000/ALL.chr14.seg.0.encoding"
+		done=expand(config[segments_out_dir], "segments.encoding.done")
 	message: 
-		"Executing segment_vcf"
+		"Executing--slice vcf into segments and encode"
 	shell:
-		"./{input.bin} {input.config_file} /
-		"&& touch" config[segments_out_dir]"segments.encoding.done"
-
-
+		"./{input.bin} {input.config_file}",
+		"touch " expand(config[segments_out_dir], "segments.encoding.done")

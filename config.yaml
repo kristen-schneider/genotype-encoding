@@ -1,4 +1,11 @@
+src_dir:
+  ./cpp/src/
+include_dir:
+  ./cpp/include/
+bin_dir:
+  ./cpp/bin/
+
 segments_config:
-  ./cpp/config_sample
+  ./cpp/configs/segment_configs
 segments_out_dir:
   ./data/segments/seg_100/
