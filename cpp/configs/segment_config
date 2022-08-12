@@ -1,9 +1,0 @@
-encoding_file=./data/encoding/encoding.trivial
-
-vcf_file=../precision-medicine/data/vcf/chr14.short.vcf
-
-segment_size=3
-
-out_dir=./data/segments/seg_3/
-
-out_base_name=chr14.short
